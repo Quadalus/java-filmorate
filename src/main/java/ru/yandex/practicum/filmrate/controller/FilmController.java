@@ -20,7 +20,7 @@ public class FilmController {
     private final Map<Integer, Film> films = new HashMap<>();
 
     @GetMapping("/films")
-    public Collection<Film> findAll() {
+    public Collection<Film> findAllFilms() {
         log.debug("Список фильмов получен");
         return films.values();
     }
@@ -44,7 +44,7 @@ public class FilmController {
         }
         validateFilm(film);
         films.put(film.getId(), film);
-        log.debug("Фильм обновлён.");
+        log.debug("Фильм с Id={} обновлён.", film.getId());
         return film;
     }
 
