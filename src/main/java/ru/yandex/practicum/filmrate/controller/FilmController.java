@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmrate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmrate.exception.ControllerValidationException;
 import ru.yandex.practicum.filmrate.model.Film;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/films")
 @Slf4j
 public class FilmController {
     private final static int MAX_DESCRIPTION_LENGTH = 200;
@@ -19,13 +21,13 @@ public class FilmController {
     private int id = 0;
     private final Map<Integer, Film> films = new HashMap<>();
 
-    @GetMapping("/films")
+    @GetMapping
     public Collection<Film> findAllFilms() {
         log.debug("Список фильмов получен");
         return films.values();
     }
 
-    @PostMapping("/films")
+    @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) {
         if (!films.containsKey(film.getId())) {
             validateFilm(film);
@@ -36,7 +38,7 @@ public class FilmController {
         return film;
     }
 
-    @PutMapping("/films")
+    @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) {
         if (!films.containsKey(film.getId())) {
             log.warn("Указан неверный id={}", film.getId());
@@ -53,12 +55,12 @@ public class FilmController {
     }
 
     private void validateFilm(Film film) {
-        if (film.getName() == null || film.getName().isBlank()) {
+        if (StringUtils.isBlank(film.getName())) {
             log.warn("Не было указано название фильма.");
             throw new ControllerValidationException("Название фильма не может быть пустым");
         }
 
-        if (film.getReleaseDate().isBefore(OLDEST_RELEASE_DATE)) {
+        if (film.getReleaseDate() != null && film.getReleaseDate().isBefore(OLDEST_RELEASE_DATE)) {
             log.warn("Самая ранняя возможная дата релиза фильма {}, указанная дата={}", OLDEST_RELEASE_DATE,
                     film.getReleaseDate());
             throw new ControllerValidationException("Указано неверное начало фильма");
@@ -69,7 +71,7 @@ public class FilmController {
             throw new ControllerValidationException("Указана неверная длительность фильма ");
         }
 
-        if (film.getDescription().length() > MAX_DESCRIPTION_LENGTH) {
+        if (film.getDescription() != null && film.getDescription().length() > MAX_DESCRIPTION_LENGTH) {
             log.warn("Максимальная длинна описания фильма равна={}, указанное описание={}", MAX_DESCRIPTION_LENGTH,
                     film.getDescription().length());
             throw new ControllerValidationException("Описание фильма слишком длинное");
