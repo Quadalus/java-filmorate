@@ -9,5 +9,4 @@ class FilmrateApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

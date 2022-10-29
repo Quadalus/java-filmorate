@@ -53,19 +53,24 @@ public class FilmController {
     }
 
     private void validateFilm(Film film) {
+        if (film.getName() == null || film.getName().isBlank()) {
+            log.warn("Не было указано название фильма.");
+            throw new ControllerValidationException("Название фильма не может быть пустым");
+        }
+
         if (film.getReleaseDate().isBefore(OLDEST_RELEASE_DATE)) {
-            log.warn("Самая ранняя возможная дата релиза фильма {}, указана {}", OLDEST_RELEASE_DATE,
+            log.warn("Самая ранняя возможная дата релиза фильма {}, указанная дата={}", OLDEST_RELEASE_DATE,
                     film.getReleaseDate());
             throw new ControllerValidationException("Указано неверное начало фильма");
         }
 
         if (film.getDuration() < 0) {
-            log.warn("Длительность фильма не может быть отрицательной, указана={}", film.getDuration());
+            log.warn("Длительность фильма не может быть отрицательной, указанная длительность={}", film.getDuration());
             throw new ControllerValidationException("Указана неверная длительность фильма ");
         }
 
-        if (film.getDescription().length() >= MAX_DESCRIPTION_LENGTH) {
-            log.warn("Максимальная длинна фильма равна={}, указана={}", MAX_DESCRIPTION_LENGTH,
+        if (film.getDescription().length() > MAX_DESCRIPTION_LENGTH) {
+            log.warn("Максимальная длинна описания фильма равна={}, указанное описание={}", MAX_DESCRIPTION_LENGTH,
                     film.getDescription().length());
             throw new ControllerValidationException("Описание фильма слишком длинное");
         }

@@ -51,13 +51,24 @@ public class UserController {
     }
 
     private void validateUser(User user) {
+        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
+            log.warn("Указан неверный формат email, указан email={}.", user.getEmail());
+            throw new ControllerValidationException("Указан неверный email.");
+        }
+
         if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.warn("Дата рождения не может быть в будущем. Сейчас {}, указана дата {}", LocalDate.now(),
+            log.warn("Дата рождения не может быть в будущем. Сейчас {}, указанная дата {}", LocalDate.now(),
                     user.getBirthday());
             throw new ControllerValidationException("Указана неверная дата рождения");
         }
 
+        if (user.getLogin() == null || user.getLogin().contains(" ") || user.getLogin().isBlank()) {
+            log.warn("Логин не может содержать пробелы или быть пустым, указанный логин={}.", user.getLogin());
+            throw new ControllerValidationException("Указан неверный логин.");
+        }
+
         if (user.getName() == null || user.getName().isBlank()) {
+            log.debug("Имя не установлено, имя взято из логина. Установлено имя={} ", user.getLogin());
             user.setName(user.getLogin());
         }
     }
