@@ -4,7 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmrate.controller.FilmController;
-import ru.yandex.practicum.filmrate.exception.ControllerValidationException;
+import ru.yandex.practicum.filmrate.exception.ValidationException;
 import ru.yandex.practicum.filmrate.model.Film;
 
 import java.time.LocalDate;
@@ -50,9 +50,9 @@ public class FilmControllerTest {
                 .duration(178)
                 .build();
 
-        assertThrows(ControllerValidationException.class, () -> filmController.addFilm(film));
-        assertThrows(ControllerValidationException.class, () -> filmController.addFilm(film1));
-        assertThrows(ControllerValidationException.class, () -> filmController.addFilm(film2));
+        assertThrows(ValidationException.class, () -> filmController.addFilm(film));
+        assertThrows(ValidationException.class, () -> filmController.addFilm(film1));
+        assertThrows(ValidationException.class, () -> filmController.addFilm(film2));
     }
 
     @Test
@@ -87,8 +87,8 @@ public class FilmControllerTest {
         assertEquals(200, film.getDescription().length());
         assertEquals(201, film1.getDescription().length());
         assertEquals(202, film2.getDescription().length());
-        assertThrows(ControllerValidationException.class, () -> filmController.addFilm(film1));
-        assertThrows(ControllerValidationException.class, () -> filmController.addFilm(film2));
+        assertThrows(ValidationException.class, () -> filmController.addFilm(film1));
+        assertThrows(ValidationException.class, () -> filmController.addFilm(film2));
     }
 
     @Test
@@ -120,8 +120,8 @@ public class FilmControllerTest {
         assertEquals(0, film.getDuration());
         assertEquals(-1, film1.getDuration());
         assertEquals(-2, film2.getDuration());
-        assertThrows(ControllerValidationException.class, () -> filmController.addFilm(film1));
-        assertThrows(ControllerValidationException.class, () -> filmController.addFilm(film2));
+        assertThrows(ValidationException.class, () -> filmController.addFilm(film1));
+        assertThrows(ValidationException.class, () -> filmController.addFilm(film2));
     }
 
     @Test
@@ -151,7 +151,7 @@ public class FilmControllerTest {
                 .build();
 
         assertEquals(LocalDate.of(1895, 12, 28), film.getReleaseDate());
-        assertThrows(ControllerValidationException.class, () -> filmController.addFilm(film1));
-        assertThrows(ControllerValidationException.class, () -> filmController.addFilm(film2));
+        assertThrows(ValidationException.class, () -> filmController.addFilm(film1));
+        assertThrows(ValidationException.class, () -> filmController.addFilm(film2));
     }
 }
