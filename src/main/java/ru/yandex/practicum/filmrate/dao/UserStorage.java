@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmrate.storage;
+package ru.yandex.practicum.filmrate.dao;
 
 import ru.yandex.practicum.filmrate.model.User;
 
