@@ -5,10 +5,7 @@ import ru.yandex.practicum.filmrate.dao.FilmStorage;
 import ru.yandex.practicum.filmrate.exception.NotFoundException;
 import ru.yandex.practicum.filmrate.model.Film;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
@@ -16,25 +13,32 @@ public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new HashMap<>();
 
     @Override
-    public Film addFilm(Film film) {
-        if (!films.containsKey(film.getId())) {
+    public Optional<Film> addFilm(Film film) {
+        Optional<Film> optionalFilm = Optional.ofNullable(film);
+        if (optionalFilm.isPresent() && !films.containsKey(film.getId())) {
             film.setId(generatedId());
             films.put(film.getId(), film);
         }
-        return film;
+        return optionalFilm;
     }
 
     @Override
-    public Film updateFilm(Film film) {
-        if (!films.containsKey(film.getId())) {
+    public Optional<Film> updateFilm(Film film) {
+        Optional<Film> optionalFilm = Optional.ofNullable(film);
+        if (optionalFilm.isEmpty() || !films.containsKey(film.getId())) {
             throw new NotFoundException("Такого фильма нет.");
         }
         films.put(film.getId(), film);
-        return film;
+        return optionalFilm;
     }
 
     @Override
-    public List<Film> findAllFilms() {
+    public Optional<Film> getFilmById(int id) {
+        return Optional.ofNullable(films.get(id));
+    }
+
+    @Override
+    public List<Film> getAllFilms() {
         return new ArrayList<>(films.values());
     }
 

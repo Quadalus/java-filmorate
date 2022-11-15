@@ -5,10 +5,7 @@ import ru.yandex.practicum.filmrate.dao.UserStorage;
 import ru.yandex.practicum.filmrate.exception.NotFoundException;
 import ru.yandex.practicum.filmrate.model.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class ImMemoryUserStorage implements UserStorage {
@@ -20,21 +17,28 @@ public class ImMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User addUser(User user) {
-        if (!users.containsKey(user.getId())) {
+    public Optional<User> addUser(User user) {
+        Optional<User> userOptional = Optional.ofNullable(user);
+        if (userOptional.isPresent() && !users.containsKey(user.getId())) {
             user.setId(generatedId());
             users.put(user.getId(), user);
         }
-        return null;
+        return userOptional;
     }
 
     @Override
-    public User updateUser(User user) {
-        if (!users.containsKey(user.getId())) {
+    public Optional<User> updateUser(User user) {
+        Optional<User> userOptional = Optional.ofNullable(user);
+        if (userOptional.isEmpty() || !users.containsKey(user.getId())) {
             throw new NotFoundException("Невозможно обновить user");
         }
         users.put(user.getId(), user);
-        return user;
+        return userOptional;
+    }
+
+    @Override
+    public Optional<User> getUserById(int id) {
+        return Optional.ofNullable(users.get(id));
     }
 
     @Override
