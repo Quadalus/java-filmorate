@@ -1,23 +1,27 @@
 package ru.yandex.practicum.filmrate.controllerTest;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmrate.controller.FilmController;
 import ru.yandex.practicum.filmrate.exception.ValidationException;
 import ru.yandex.practicum.filmrate.model.Film;
+import ru.yandex.practicum.filmrate.service.FilmService;
+import ru.yandex.practicum.filmrate.service.ValidationService;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FilmControllerTest {
     private FilmController filmController;
+    private FilmService filmService;
+    private ValidationService validationService;
 
-    @BeforeEach
+    /*@BeforeEach
     public void setUp() {
         filmController = new FilmController();
-    }
+    }*/
 
     @AfterEach
     public void tearDown() {

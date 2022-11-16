@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmrate.controllerTest;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmrate.controller.UserController;
 import ru.yandex.practicum.filmrate.exception.ValidationException;
@@ -15,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class UserControllerTest {
     private UserController userController;
 
-    @BeforeEach
+   /* @BeforeEach
     public void setUp() {
         userController = new UserController();
-    }
+    }*/
 
     @AfterEach
     public void tearDown() {

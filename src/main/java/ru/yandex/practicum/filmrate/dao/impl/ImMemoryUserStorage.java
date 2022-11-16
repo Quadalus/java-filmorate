@@ -17,23 +17,21 @@ public class ImMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Optional<User> addUser(User user) {
-        Optional<User> userOptional = Optional.ofNullable(user);
-        if (userOptional.isPresent() && !users.containsKey(user.getId())) {
+    public User addUser(User user) {
+        if (!users.containsKey(user.getId())) {
             user.setId(generatedId());
             users.put(user.getId(), user);
         }
-        return userOptional;
+        return user;
     }
 
     @Override
-    public Optional<User> updateUser(User user) {
-        Optional<User> userOptional = Optional.ofNullable(user);
-        if (userOptional.isEmpty() || !users.containsKey(user.getId())) {
-            throw new NotFoundException("Невозможно обновить user");
+    public User updateUser(User user) {
+        if (!users.containsKey(user.getId())) {
+            throw new NotFoundException(String.format("Невозможно обновить user c id=%d", id));
         }
         users.put(user.getId(), user);
-        return userOptional;
+        return user;
     }
 
     @Override

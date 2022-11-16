@@ -13,23 +13,21 @@ public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new HashMap<>();
 
     @Override
-    public Optional<Film> addFilm(Film film) {
-        Optional<Film> optionalFilm = Optional.ofNullable(film);
-        if (optionalFilm.isPresent() && !films.containsKey(film.getId())) {
+    public Film addFilm(Film film) {
+        if (!films.containsKey(film.getId())) {
             film.setId(generatedId());
             films.put(film.getId(), film);
         }
-        return optionalFilm;
+        return film;
     }
 
     @Override
-    public Optional<Film> updateFilm(Film film) {
-        Optional<Film> optionalFilm = Optional.ofNullable(film);
-        if (optionalFilm.isEmpty() || !films.containsKey(film.getId())) {
-            throw new NotFoundException("Такого фильма нет.");
+    public Film updateFilm(Film film) {
+        if (!films.containsKey(film.getId())) {
+            throw new NotFoundException(String.format("Невозможно обновить film c id=%d", id));
         }
         films.put(film.getId(), film);
-        return optionalFilm;
+        return film;
     }
 
     @Override

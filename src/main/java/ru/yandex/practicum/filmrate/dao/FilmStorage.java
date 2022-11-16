@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FilmStorage {
-    Optional<Film> addFilm(Film film);
+    Film addFilm(Film film);
 
-    Optional<Film> updateFilm(Film film);
+    Film updateFilm(Film film);
 
     void deleteFilm(int id);
 
