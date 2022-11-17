@@ -19,12 +19,6 @@ public class FilmController {
     private final FilmService filmService;
     private final ValidationService validationService;
 
-    /*@Autowired
-    public FilmController(FilmService filmService, ValidationService validationService) {
-        this.filmService = filmService;
-        this.validationService = validationService;
-    }*/
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Film> findAllFilms() {
@@ -70,5 +64,29 @@ public class FilmController {
     public void deleteFilm(@PathVariable int id) {
         log.info("Фильм с id={} был удалён", id);
         filmService.deleteFilmById(id);
+    }
+
+    @PutMapping("/{id}/like/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void addLike(@PathVariable int id,
+                        @PathVariable int userId) {
+        log.info("Пользователь с id={} добавил лайк фильму с id={}.", userId, id);
+        filmService.addLike(id, userId);
+    }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteLike(@PathVariable int id,
+                           @PathVariable int userId) {
+        log.info("У фильма с id={} удалён лайк пользователем с userId={}", id, userId);
+        filmService.deleteLike(id, userId);
+    }
+
+    @GetMapping("/popular")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Film> getTopFilms(@RequestParam(required = false, defaultValue = "10") int count) {
+        validationService.validateCount(count);
+        log.info("Список популярных фильмов получен.");
+        return filmService.getBestFilms(count);
     }
 }

@@ -10,44 +10,53 @@ import java.util.*;
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
     private int id = 0;
-    private final Map<Integer, Film> films = new HashMap<>();
+    private final Map<Integer, Film> filmMap;
+
+    public InMemoryFilmStorage() {
+        filmMap = new HashMap<>();
+    }
 
     @Override
     public Film addFilm(Film film) {
-        if (!films.containsKey(film.getId())) {
+        if (!filmMap.containsKey(film.getId())) {
             film.setId(generatedId());
-            films.put(film.getId(), film);
+            filmMap.put(film.getId(), film);
         }
         return film;
     }
 
     @Override
     public Film updateFilm(Film film) {
-        if (!films.containsKey(film.getId())) {
+        if (!filmMap.containsKey(film.getId())) {
             throw new NotFoundException(String.format("Невозможно обновить film c id=%d", id));
         }
-        films.put(film.getId(), film);
+        filmMap.put(film.getId(), film);
         return film;
     }
 
     @Override
     public Optional<Film> getFilmById(int id) {
-        return Optional.ofNullable(films.get(id));
+        return Optional.ofNullable(filmMap.get(id));
     }
 
     @Override
-    public List<Film> getAllFilms() {
-        return new ArrayList<>(films.values());
+    public List<Film> getListFilms() {
+        return new ArrayList<>(filmMap.values());
+    }
+
+    @Override
+    public Map<Integer, Film> getFilmMap() {
+        return filmMap;
     }
 
     @Override
     public void deleteFilm(int id) {
-        films.remove(id);
+        filmMap.remove(id);
     }
 
     @Override
     public void deleteAllFilms() {
-        films.clear();
+        filmMap.clear();
     }
 
     private int generatedId() {
