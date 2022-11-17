@@ -1,31 +1,24 @@
 package ru.yandex.practicum.filmrate.controllerTest;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmrate.controller.FilmController;
 import ru.yandex.practicum.filmrate.exception.ValidationException;
 import ru.yandex.practicum.filmrate.model.Film;
-import ru.yandex.practicum.filmrate.service.FilmService;
-import ru.yandex.practicum.filmrate.service.ValidationService;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@SpringBootTest
 public class FilmControllerTest {
-    private FilmController filmController;
-    private FilmService filmService;
-    private ValidationService validationService;
+    private final FilmController filmController;
 
-    /*@BeforeEach
-    public void setUp() {
-        filmController = new FilmController();
-    }*/
-
-    @AfterEach
-    public void tearDown() {
-        filmController = null;
+    @Autowired
+    public FilmControllerTest(FilmController filmController) {
+        this.filmController = filmController;
     }
 
     @Test

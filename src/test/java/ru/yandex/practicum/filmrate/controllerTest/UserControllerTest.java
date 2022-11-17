@@ -1,7 +1,8 @@
 package ru.yandex.practicum.filmrate.controllerTest;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmrate.controller.UserController;
 import ru.yandex.practicum.filmrate.exception.ValidationException;
 import ru.yandex.practicum.filmrate.model.User;
@@ -11,17 +12,13 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@SpringBootTest
 public class UserControllerTest {
-    private UserController userController;
+    private final UserController userController;
 
-   /* @BeforeEach
-    public void setUp() {
-        userController = new UserController();
-    }*/
-
-    @AfterEach
-    public void tearDown() {
-        userController = null;
+    @Autowired
+    public UserControllerTest(UserController userController) {
+        this.userController = userController;
     }
 
     @Test
