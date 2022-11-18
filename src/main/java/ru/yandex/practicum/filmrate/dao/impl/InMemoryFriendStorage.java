@@ -5,38 +5,62 @@ import ru.yandex.practicum.filmrate.dao.FriendStorage;
 import ru.yandex.practicum.filmrate.exception.NotFoundException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class InMemoryFriendStorage implements FriendStorage {
-    private final Map<Integer, Set<Integer>> userFriends;
+    private final Map<Integer, Set<Integer>> usersFriends;
 
     public InMemoryFriendStorage() {
-        this.userFriends = new HashMap<>();
+        this.usersFriends = new HashMap<>();
     }
 
     @Override
     public void addFriend(int userId, int friendId) {
-        if (!userFriends.containsKey(userId)) {
-            userFriends.put(userId, new HashSet<>());
-        }
-        userFriends.get(userId)
-                .add(friendId);
+        checkingExistenceUser(userId);
+        checkingExistenceUser(friendId);
+        addToFriendship(userId, friendId);
     }
 
     @Override
     public void deleteFriend(int userId, int friendId) {
-        if (!userFriends.containsKey(userId)) {
+        if (!usersFriends.containsKey(userId) || !usersFriends.containsKey(friendId)) {
             throw new NotFoundException("Такого пользователя нет.");
         }
-        userFriends.get(userId)
-                .remove(friendId);
+        removeFromFriendship(userId, friendId);
     }
 
     @Override
-    public Set<Integer> getUserFriends(int userId) {
-        if (userFriends.containsKey(userId)) {
-            return userFriends.get(userId);
+    public Set<Integer> getFriends(int userId) {
+        if (usersFriends.containsKey(userId)) {
+            return usersFriends.get(userId);
         }
         return Collections.emptySet();
+    }
+
+    @Override
+    public List<Integer> getMutualFriends(int userId, int friendId) {
+        var friends = getFriends(userId);
+        var otherFriends = getFriends(friendId);
+
+        return friends.stream()
+                .filter(otherFriends::contains)
+                .collect(Collectors.toList());
+    }
+
+    private void addToFriendship(int userId, int friendId) {
+        usersFriends.get(userId).add(friendId);
+        usersFriends.get(friendId).add(userId);
+    }
+
+    private void removeFromFriendship(int userId, int friendId) {
+        usersFriends.get(userId).remove(friendId);
+        usersFriends.get(friendId).remove(userId);
+    }
+
+    private void checkingExistenceUser(int userId) {
+        if (!usersFriends.containsKey(userId)) {
+            usersFriends.put(userId, new HashSet<>());
+        }
     }
 }

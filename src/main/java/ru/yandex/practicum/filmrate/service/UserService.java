@@ -3,19 +3,21 @@ package ru.yandex.practicum.filmrate.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmrate.dao.UserStorage;
+import ru.yandex.practicum.filmrate.dao.FriendStorage;
 import ru.yandex.practicum.filmrate.exception.NotFoundException;
 import ru.yandex.practicum.filmrate.model.User;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserStorage userStorage;
-//    private FriendStorage FriendStorage;
+    private final FriendStorage friendStorage;
 
     public List<User> findAllUser() {
-        return userStorage.findAllUsers();
+        return userStorage.getAllUsers();
     }
 
     public User findUserById(int id) {
@@ -37,5 +39,40 @@ public class UserService {
 
     public void deleteUserById(int id) {
         userStorage.deleteUser(id);
+    }
+
+    public void addFriend(int userId, int friendId) {
+        checkingUserInStorage(userId);
+        checkingUserInStorage(friendId);
+        friendStorage.addFriend(userId, friendId);
+    }
+
+    public void deleteFriend(int userId, int friendId) {
+        checkingUserInStorage(userId);
+        checkingUserInStorage(friendId);
+        friendStorage.deleteFriend(userId, friendId);
+    }
+
+    public List<User> getMutualFriends(int userId, int friendId) {
+        checkingUserInStorage(userId);
+        checkingUserInStorage(friendId);
+        return friendStorage.getMutualFriends(userId, friendId)
+                .stream()
+                .map(userStorage.getUserMap()::get)
+                .collect(Collectors.toList());
+    }
+
+    public List<User> getUserFriends(int userId) {
+        checkingUserInStorage(userId);
+        return friendStorage.getFriends(userId)
+                .stream()
+                .map(userStorage.getUserMap()::get)
+                .collect(Collectors.toList());
+    }
+
+    private void checkingUserInStorage(int id) {
+        if (!userStorage.getUserMap().containsKey(id)) {
+            throw new NotFoundException(String.format("Пользователя с id=%d нет", id));
+        }
     }
 }

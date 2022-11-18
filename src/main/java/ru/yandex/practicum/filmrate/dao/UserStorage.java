@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmrate.dao;
 import ru.yandex.practicum.filmrate.model.User;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface UserStorage {
@@ -16,5 +17,7 @@ public interface UserStorage {
 
     Optional<User> getUserById(int id);
 
-    List<User> findAllUsers();
+    List<User> getAllUsers();
+
+    Map<Integer, User> getUserMap();
 }

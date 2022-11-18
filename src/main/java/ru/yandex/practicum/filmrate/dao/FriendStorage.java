@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmrate.dao;
 
 import java.util.Set;
+import java.util.List;
 
 public interface FriendStorage {
 
@@ -8,5 +9,7 @@ public interface FriendStorage {
 
     void deleteFriend(int id, int friendId);
 
-    Set<Integer> getUserFriends(int userId);
+    Set<Integer> getFriends(int userId);
+
+    List<Integer> getMutualFriends(int userId, int friendId);
 }
