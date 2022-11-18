@@ -19,7 +19,9 @@ public class FilmService {
     private final LikeStorage likeStorage;
 
     public Film addFilm(Film film) {
-        return filmStorage.addFilm(film);
+        Film addedFilm = filmStorage.addFilm(film);
+        likeStorage.addFilmToRating(addedFilm.getId());
+        return  addedFilm;
     }
 
     public Film updateFilm(Film film) {
@@ -40,6 +42,7 @@ public class FilmService {
     }
 
     public void deleteFilmById(int id) {
+        likeStorage.deleteFilmFromRating(id);
         filmStorage.deleteFilm(id);
     }
 

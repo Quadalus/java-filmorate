@@ -1,8 +1,6 @@
 package ru.yandex.practicum.filmrate.dao;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public interface LikeStorage {
 
@@ -10,7 +8,9 @@ public interface LikeStorage {
 
     void deleteLike(int filmId, int userId);
 
-    Map<Integer, Set<Integer>> getLikedFilms();
-
     List<Integer> getTopFilms(int count);
+
+    void addFilmToRating(int filmId);
+
+    void deleteFilmFromRating(int filmId);
 }

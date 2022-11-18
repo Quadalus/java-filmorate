@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmrate.exception.NotFoundException;
 import ru.yandex.practicum.filmrate.exception.ValidationException;
 import ru.yandex.practicum.filmrate.model.ErrorResponse;
 
-@RestControllerAdvice("ru.yandex.practicum.controller")
+@RestControllerAdvice
 public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)

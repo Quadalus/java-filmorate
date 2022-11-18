@@ -17,9 +17,6 @@ public class InMemoryLikeStorage implements LikeStorage {
 
     @Override
     public void addLike(int filmId, int userId) {
-        if (!likedFilms.containsKey(filmId)) {
-            likedFilms.put(filmId, new HashSet<>());
-        }
         likedFilms.get(filmId)
                 .add(userId);
     }
@@ -34,16 +31,23 @@ public class InMemoryLikeStorage implements LikeStorage {
     }
 
     @Override
-    public Map<Integer, Set<Integer>> getLikedFilms() {
-        return likedFilms;
-    }
-
-    @Override
     public List<Integer> getTopFilms(int count) {
         return likedFilms.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(((o1, o2) -> Integer.compare(o2.size(), o1.size()))))
                 .map((Map.Entry::getKey))
                 .limit(count)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void addFilmToRating(int filmId) {
+        if (!likedFilms.containsKey(filmId)) {
+            likedFilms.put(filmId, new HashSet<>());
+        }
+    }
+
+    @Override
+    public void deleteFilmFromRating(int filmId) {
+        likedFilms.remove(filmId);
     }
 }

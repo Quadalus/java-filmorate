@@ -82,7 +82,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public void addFriend(@PathVariable int id,
                           @PathVariable int friendId) {
         log.info("Пользователь с id={} добавил в друзья пользователя с id={}", id, friendId);
@@ -90,7 +90,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFriend(@PathVariable int id,
                              @PathVariable int friendId) {
         log.info("Пользователь с id={} удалил из друзей пользователя с id={}", id, friendId);
