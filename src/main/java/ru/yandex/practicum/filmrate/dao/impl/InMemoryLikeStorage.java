@@ -17,8 +17,7 @@ public class InMemoryLikeStorage implements LikeStorage {
 
     @Override
     public void addLike(int filmId, int userId) {
-        likedFilms.get(filmId)
-                .add(userId);
+        likedFilms.get(filmId).add(userId);
     }
 
     @Override
@@ -26,8 +25,7 @@ public class InMemoryLikeStorage implements LikeStorage {
         if (!likedFilms.containsKey(filmId)) {
             throw new NotFoundException("Такого фильма нет.");
         }
-        likedFilms.get(filmId)
-                .remove(userId);
+        likedFilms.get(filmId).remove(userId);
     }
 
     @Override
