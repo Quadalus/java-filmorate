@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmrate.controllerTest;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmrate.controller.UserController;
-import ru.yandex.practicum.filmrate.exception.ControllerValidationException;
+import ru.yandex.practicum.filmrate.exception.ValidationException;
 import ru.yandex.practicum.filmrate.model.User;
 
 import java.time.LocalDate;
@@ -12,17 +12,13 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@SpringBootTest
 public class UserControllerTest {
-    private UserController userController;
+    private final UserController userController;
 
-    @BeforeEach
-    public void setUp() {
-        userController = new UserController();
-    }
-
-    @AfterEach
-    public void tearDown() {
-        userController = null;
+    @Autowired
+    public UserControllerTest(UserController userController) {
+        this.userController = userController;
     }
 
     @Test
@@ -55,10 +51,10 @@ public class UserControllerTest {
                 .birthday(LocalDate.of(1990, 10, 4))
                 .build();
 
-        assertThrows(ControllerValidationException.class, () -> userController.addUser(user));
-        assertThrows(ControllerValidationException.class, () -> userController.addUser(user1));
-        assertThrows(ControllerValidationException.class, () -> userController.addUser(user2));
-        assertThrows(ControllerValidationException.class, () -> userController.addUser(user3));
+        assertThrows(ValidationException.class, () -> userController.addUser(user));
+        assertThrows(ValidationException.class, () -> userController.addUser(user1));
+        assertThrows(ValidationException.class, () -> userController.addUser(user2));
+        assertThrows(ValidationException.class, () -> userController.addUser(user3));
     }
 
     @Test
@@ -77,8 +73,8 @@ public class UserControllerTest {
                 .birthday(LocalDate.MAX)
                 .build();
 
-        assertThrows(ControllerValidationException.class, () -> userController.addUser(user));
-        assertThrows(ControllerValidationException.class, () -> userController.addUser(user1));
+        assertThrows(ValidationException.class, () -> userController.addUser(user));
+        assertThrows(ValidationException.class, () -> userController.addUser(user1));
     }
 
     @Test
@@ -111,10 +107,10 @@ public class UserControllerTest {
                 .birthday(LocalDate.of(1990, 10, 4))
                 .build();
 
-        assertThrows(ControllerValidationException.class, () -> userController.addUser(user));
-        assertThrows(ControllerValidationException.class, () -> userController.addUser(user1));
-        assertThrows(ControllerValidationException.class, () -> userController.addUser(user2));
-        assertThrows(ControllerValidationException.class, () -> userController.addUser(user3));
+        assertThrows(ValidationException.class, () -> userController.addUser(user));
+        assertThrows(ValidationException.class, () -> userController.addUser(user1));
+        assertThrows(ValidationException.class, () -> userController.addUser(user2));
+        assertThrows(ValidationException.class, () -> userController.addUser(user3));
     }
 
     @Test
