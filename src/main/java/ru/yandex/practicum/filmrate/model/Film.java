@@ -17,9 +17,11 @@ public class Film {
     private int id;
     @NotBlank
     private String name;
+    @NotBlank
     private String description;
     @NotNull
     private LocalDate releaseDate;
     @PositiveOrZero
-    private long duration;
+    private int duration;
+    private int mpaId;
 }

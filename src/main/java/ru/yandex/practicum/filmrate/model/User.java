@@ -19,6 +19,7 @@ public class User {
     private String email;
     @NotBlank
     private String login;
+    @NotBlank
     private String name;
     @NotNull
     private LocalDate birthday;
