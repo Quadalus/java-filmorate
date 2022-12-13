@@ -57,7 +57,8 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public void deleteFilm(int id) {
-        String sqlQuery = "delete from FILMS where FILM_ID = ?";
+        String sqlQuery = "delete from FILMS " +
+                "where FILM_ID = ?";
         jdbcTemplate.update(sqlQuery, id);
     }
 
@@ -73,6 +74,7 @@ public class FilmDbStorage implements FilmStorage {
                 "from FILMS " +
                 "where FILM_ID = ?";
         List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, id);
+
         if (films.isEmpty()) {
             return Optional.empty();
         }
@@ -90,6 +92,7 @@ public class FilmDbStorage implements FilmStorage {
     public Map<Integer, Film> getFilmMap() {
         List<Film> films = getListFilms();
         Map<Integer, Film> filmMap = new HashMap<>();
+
         for (Film film : films) {
             filmMap.put(film.getId(), film);
         }
