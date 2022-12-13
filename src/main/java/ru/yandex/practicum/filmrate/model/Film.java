@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Film {
-    private int id;
+    private Integer id;
     @NotBlank
     private String name;
     @NotBlank
@@ -22,6 +22,6 @@ public class Film {
     @NotNull
     private LocalDate releaseDate;
     @PositiveOrZero
-    private int duration;
-    private int mpaId;
+    private Integer duration;
+    private Integer mpaId;
 }

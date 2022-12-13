@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmrate.dao.impl;
+package ru.yandex.practicum.filmrate.dao.impl.InMemoryImpl;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmrate.dao.LikeStorage;
