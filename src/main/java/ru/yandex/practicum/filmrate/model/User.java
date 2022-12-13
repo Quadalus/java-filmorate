@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class User {
-    private int id;
+    private Integer id;
     @Email
     private String email;
     @NotBlank

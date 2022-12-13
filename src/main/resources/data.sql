@@ -16,6 +16,3 @@ MERGE INTO genres (genre_id, name)
            (8, 'Мелодрама'),
            (9, 'фантастика');
 
-MERGE INTO FRIENDSHIPS_STATUS (STATUS_ID, STATUS)
-    VALUES (1, 'Дружба не подтверждена'),
-           (2, 'Дружба подтверждена');

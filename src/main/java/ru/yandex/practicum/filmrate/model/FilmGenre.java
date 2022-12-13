@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class FilmGenre {
-    private int filmId;
-    private int genreId;
+    private Integer filmId;
+    private Integer genreId;
 }
