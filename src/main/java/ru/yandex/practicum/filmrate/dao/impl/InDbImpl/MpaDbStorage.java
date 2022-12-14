@@ -43,6 +43,6 @@ public class MpaDbStorage implements MpaStorage {
 
     private static Mpa makeMpa(ResultSet rs, int rowNum) throws SQLException {
         return new Mpa(rs.getInt("MPA_ID"),
-                rs.getString("NAME"));
+                rs.getString("MPA_NAME"));
     }
 }
