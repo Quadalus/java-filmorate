@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmrate.dao.UserStorage;
+import ru.yandex.practicum.filmrate.exception.NotFoundException;
 import ru.yandex.practicum.filmrate.model.User;
 
 import java.sql.Date;
@@ -14,7 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-@Repository
+@Repository("userDb")
 public class UserDbStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
 
@@ -29,7 +30,7 @@ public class UserDbStorage implements UserStorage {
                 "values (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"film_id"});
+            PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"user_id"});
             stmt.setString(1, user.getEmail());
             stmt.setString(2, user.getLogin());
             stmt.setString(3, user.getName());
@@ -42,14 +43,18 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User updateUser(User user) {
-        String sqlQuery = "update USERS " +
-                "set EMAIL = ?, LOGIN = ?, USER_NAME = ?, BIRTHDAY = ? " +
+        String sqlQuery = "update USERS set " +
+                "EMAIL = ?, LOGIN = ?, USER_NAME = ?, BIRTHDAY = ? " +
                 "where USER_ID = ?";
-        jdbcTemplate.update(sqlQuery
+        int result = jdbcTemplate.update(sqlQuery
                 , user.getEmail()
                 , user.getLogin()
                 , user.getName()
-                , Date.valueOf(user.getBirthday()));
+                , Date.valueOf(user.getBirthday())
+                , user.getId());
+        if (result != 1) {
+            throw new NotFoundException("Невозможно обновить пользователя");
+        }
         return user;
     }
 

@@ -1,18 +1,13 @@
 package ru.yandex.practicum.filmrate.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
-import javax.validation.constraints.NotBlank;
+import lombok.*;
 
 @Setter
 @Getter
-@RequiredArgsConstructor
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Mpa {
     private Integer id;
-    @NotBlank
     private String name;
 }

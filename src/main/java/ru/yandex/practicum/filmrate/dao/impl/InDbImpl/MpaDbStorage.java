@@ -22,7 +22,7 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public Optional<Mpa> getMpaById(int id) {
-        String sqlQuery = "select MPA_ID, NAME " +
+        String sqlQuery = "select MPA_ID, MPA_NAME " +
                 "from MPA_RATINGS " +
                 "where MPA_ID = ?";
 
@@ -35,7 +35,7 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public List<Mpa> getAllMpa() {
-        String sqlQuery = "select MPA_ID, NAME " +
+        String sqlQuery = "select MPA_ID, MPA_NAME " +
                 "from MPA_RATINGS ";
 
         return jdbcTemplate.query(sqlQuery, MpaDbStorage::makeMpa);

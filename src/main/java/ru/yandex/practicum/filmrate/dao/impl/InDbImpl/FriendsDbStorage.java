@@ -24,7 +24,7 @@ public class FriendsDbStorage implements FriendStorage {
 
     @Override
     public void addFriend(int userId, int friendId) {
-        String sqlQuery = "insert into USERS_FRIENDS(FRIEND_ID, USER_ID) " +
+        String sqlQuery = "insert into USERS_FRIENDS(USER_ID, FRIEND_ID) " +
                 "values (?, ?)";
         jdbcTemplate.update(con -> {
             PreparedStatement stmt = con.prepareStatement(sqlQuery);
@@ -37,16 +37,17 @@ public class FriendsDbStorage implements FriendStorage {
     @Override
     public void deleteFriend(int userId, int friendId) {
         String sqlQuery = "delete from USERS_FRIENDS " +
-                "where USER_ID = ?" +
+                "where USER_ID = ? " +
                 "and FRIEND_ID = ?";
-        jdbcTemplate.update(sqlQuery);
+        jdbcTemplate.update(sqlQuery, userId, friendId);
     }
 
     @Override
     public Set<Integer> getFriends(int userId) {
-        String sqlQuery = "select USER_ID, FRIEND_ID from USERS_FRIENDS " +
-                "where USER_ID = ?";
-        return new HashSet<>(jdbcTemplate.query(sqlQuery, FriendsDbStorage::makeFriendId));
+        String sqlQuery = "select * from USERS, USERS_FRIENDS " +
+                "where USERS.USER_ID = USERS_FRIENDS.FRIEND_ID " +
+                "and USERS_FRIENDS.USER_ID = ?";
+        return new HashSet<>(jdbcTemplate.query(sqlQuery, FriendsDbStorage::makeFriendId, userId));
     }
 
     @Override

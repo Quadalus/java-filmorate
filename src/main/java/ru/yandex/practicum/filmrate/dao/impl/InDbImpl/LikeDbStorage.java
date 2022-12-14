@@ -41,13 +41,13 @@ public class LikeDbStorage implements LikeStorage {
 
     @Override
     public List<Integer> getTopFilms(int count) {
-        String sqlQuery = "select FILM_ID, " +
-                "USER_ID, " +
-                "count(FILM_ID) AS FILM_LIKES " +
-                "from LIKES " +
-                "GROUP BY FILM_ID, USER_ID " +
-                "LIMIT ?";
-        return jdbcTemplate.query(sqlQuery, LikeDbStorage::makeLike);
+        String sqlQuery = "SELECT * FROM films AS f " +
+                "LEFT JOIN MPA_RATINGS m ON m.mpa_id = f.FILM_ID " +
+                "LEFT OUTER JOIN likes l on f.film_id = l.film_id " +
+                "GROUP BY f.film_id " +
+                "ORDER BY COUNT(l.film_id) " +
+                "DESC LIMIT ?;";
+        return jdbcTemplate.query(sqlQuery, LikeDbStorage::makeLike, count);
     }
 
     private static Integer makeLike(ResultSet rs, int rowNum) throws SQLException {

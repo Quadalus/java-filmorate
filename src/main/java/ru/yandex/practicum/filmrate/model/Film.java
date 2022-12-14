@@ -23,5 +23,6 @@ public class Film {
     private LocalDate releaseDate;
     @PositiveOrZero
     private Integer duration;
-    private Integer mpaId;
+    private Integer rate;
+    private Mpa mpa;
 }

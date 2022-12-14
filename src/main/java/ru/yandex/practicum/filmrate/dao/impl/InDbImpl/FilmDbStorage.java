@@ -6,7 +6,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmrate.dao.FilmStorage;
+import ru.yandex.practicum.filmrate.exception.NotFoundException;
 import ru.yandex.practicum.filmrate.model.Film;
+import ru.yandex.practicum.filmrate.model.Mpa;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -34,7 +36,7 @@ public class FilmDbStorage implements FilmStorage {
             stmt.setString(2, film.getDescription());
             stmt.setDate(3, Date.valueOf(film.getReleaseDate()));
             stmt.setInt(4, film.getDuration());
-            stmt.setInt(5, film.getMpaId());
+            stmt.setInt(5, film.getMpa().getId());
             return stmt;
         }, keyHolder);
         film.setId(Objects.requireNonNull(keyHolder.getKey()).intValue());
@@ -46,12 +48,16 @@ public class FilmDbStorage implements FilmStorage {
         String sqlQuery = "update FILMS set " +
                 "NAME = ?, DESCRIPTION = ?, RELEASEDATE = ?, DURATION = ?, MPA_ID = ? " +
                 "where FILM_ID = ?";
-        jdbcTemplate.update(sqlQuery
+        int result = jdbcTemplate.update(sqlQuery
                 , film.getName()
                 , film.getDescription()
                 , Date.valueOf(film.getReleaseDate())
                 , film.getDuration()
-                , film.getMpaId());
+                , film.getMpa().getId()
+                , film.getId());
+        if (result != 1) {
+            throw new NotFoundException("Фильм не найден.");
+        }
         return film;
     }
 
@@ -70,8 +76,8 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Optional<Film> getFilmById(int id) {
-        String sqlQuery = "select FILM_ID, NAME, DESCRIPTION, RELEASEDATE, DURATION, MPA_ID " +
-                "from FILMS " +
+        String sqlQuery = "select * from FILMS " +
+                "join MPA_RATINGS MR on FILMS.MPA_ID = MR.MPA_ID " +
                 "where FILM_ID = ?";
         List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, id);
 
@@ -83,8 +89,8 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getListFilms() {
-        String sqlQuery = "select FILM_ID, NAME, DESCRIPTION, RELEASEDATE, DURATION, MPA_ID " +
-                "from FILMS ";
+        String sqlQuery = "select * from FILMS " +
+                "join MPA_RATINGS MR on FILMS.MPA_ID = MR.MPA_ID";
         return jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm);
     }
 
@@ -105,6 +111,7 @@ public class FilmDbStorage implements FilmStorage {
                 rs.getString("DESCRIPTION"),
                 rs.getDate("RELEASEDATE").toLocalDate(),
                 rs.getInt("DURATION"),
-                rs.getInt("MPA_ID"));
+                rs.getInt("RATE"),
+                new Mpa(rs.getInt("MPA_ID"), rs.getString("MPA_NAME")));
     }
 }
