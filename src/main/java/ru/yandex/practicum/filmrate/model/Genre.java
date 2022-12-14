@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @Getter
 public class Genre {
-    private int id;
+    private Integer id;
     @NotBlank
     private String name;
 }
