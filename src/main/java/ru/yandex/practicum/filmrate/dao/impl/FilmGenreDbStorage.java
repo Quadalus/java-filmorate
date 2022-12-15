@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmrate.dao.impl.InDbImpl;
+package ru.yandex.practicum.filmrate.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -25,16 +25,16 @@ public class FilmGenreDbStorage implements FilmGenreStorage {
 
     @Override
     public Set<Genre> getGenresByFilmId(int filmId) {
-        String sqlQuery = "SELECT * FROM genres g " +
-                "JOIN films_genres fg on g.genre_id = fg.GENRE_ID " +
+        String sqlQuery = "SELECT * FROM genres AS g " +
+                "JOIN films_genres AS fg on g.genre_id = fg.GENRE_ID " +
                 "WHERE film_id = ?";
         return new LinkedHashSet<>(jdbcTemplate.query(sqlQuery, GenreDbStorage::makeGenre, filmId));
     }
 
     @Override
     public void addGenreToFilm(int filmId, Set<Genre> genreList) {
-        String sqlQuery = "insert into FILMS_GENRES(film_id, genre_id) " +
-                "values (?, ?)";
+        String sqlQuery = "INSERT INTO films_genres(film_id, genre_id) " +
+                "VALUES(?, ?)";
         List<Genre> genresNoRepeat = genreList.stream().distinct().collect(Collectors.toList());
         deleteGenresByFilmId(filmId);
         jdbcTemplate.batchUpdate(sqlQuery, new BatchPreparedStatementSetter() {
@@ -50,8 +50,8 @@ public class FilmGenreDbStorage implements FilmGenreStorage {
 
     @Override
     public void deleteGenresByFilmId(int filmId) {
-        String sqlQuery = "delete from FILMS_GENRES " +
-                "where FILM_ID = ?";
+        String sqlQuery = "DELETE FROM films_genres " +
+                "WHERE film_id = ?";
         jdbcTemplate.update(sqlQuery, filmId);
     }
 }

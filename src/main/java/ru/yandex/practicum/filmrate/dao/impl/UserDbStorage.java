@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmrate.dao.impl.InDbImpl;
+package ru.yandex.practicum.filmrate.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,8 +26,8 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User addUser(User user) {
-        String sqlQuery = "insert into USERS(EMAIL, LOGIN, USER_NAME, BIRTHDAY) " +
-                "values (?, ?, ?, ?)";
+        String sqlQuery = "INSERT INTO users(email, login, user_name, birthday) " +
+                "VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"user_id"});
@@ -43,9 +43,9 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User updateUser(User user) {
-        String sqlQuery = "update USERS set " +
-                "EMAIL = ?, LOGIN = ?, USER_NAME = ?, BIRTHDAY = ? " +
-                "where USER_ID = ?";
+        String sqlQuery = "UPDATE users SET " +
+                "email = ?, login = ?, user_name = ?, birthday = ? " +
+                "WHERE user_id = ?";
         int result = jdbcTemplate.update(sqlQuery
                 , user.getEmail()
                 , user.getLogin()
@@ -60,22 +60,22 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void deleteUser(int id) {
-        String sqlQuery = "delete from USERS " +
-                "where USER_ID = ?";
+        String sqlQuery = "DELETE FROM users " +
+                "WHERE user_id = ?";
         jdbcTemplate.update(sqlQuery, id);
     }
 
     @Override
     public void deleteAllUser() {
-        String sqlQuery = "delete from USERS";
+        String sqlQuery = "DELETE FROM users";
         jdbcTemplate.update(sqlQuery);
     }
 
     @Override
     public Optional<User> getUserById(int id) {
-        String sqlQuery = "select USER_ID, EMAIL, LOGIN, USER_NAME, BIRTHDAY " +
-                "from USERS " +
-                "where USER_ID = ?";
+        String sqlQuery = "SELECT user_id, email, login, user_name, birthday " +
+                "FROM users " +
+                "WHERE user_id = ?";
         List<User> users = jdbcTemplate.query(sqlQuery, UserDbStorage::makeUser, id);
 
         if (users.isEmpty()) {
@@ -86,8 +86,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<User> getAllUsers() {
-        String sqlQuery = "select USER_ID, EMAIL, LOGIN, USER_NAME, BIRTHDAY " +
-                "from USERS ";
+        String sqlQuery = "SELECT * FROM users";
         return jdbcTemplate.query(sqlQuery, UserDbStorage::makeUser);
     }
 
@@ -103,10 +102,10 @@ public class UserDbStorage implements UserStorage {
     }
 
     private static User makeUser(ResultSet rs, int rowNum) throws SQLException {
-        return new User(rs.getInt("USER_ID"),
-                rs.getString("EMAIL"),
-                rs.getString("LOGIN"),
-                rs.getString("USER_NAME"),
-                rs.getDate("BIRTHDAY").toLocalDate());
+        return new User(rs.getInt("user_id"),
+                rs.getString("email"),
+                rs.getString("login"),
+                rs.getString("user_name"),
+                rs.getDate("birthday").toLocalDate());
     }
 }

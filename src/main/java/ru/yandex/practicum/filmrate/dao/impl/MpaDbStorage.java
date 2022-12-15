@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmrate.dao.impl.InDbImpl;
+package ru.yandex.practicum.filmrate.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,9 +22,9 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public Optional<Mpa> getMpaById(int id) {
-        String sqlQuery = "select MPA_ID, MPA_NAME " +
-                "from MPA_RATINGS " +
-                "where MPA_ID = ?";
+        String sqlQuery = "SELECT mpa_id, mpa_name " +
+                "FROM mpa_ratings " +
+                "WHERE mpa_id = ?";
 
         List<Mpa> mpaList = jdbcTemplate.query(sqlQuery, MpaDbStorage::makeMpa, id);
         if (mpaList.isEmpty()) {
@@ -35,14 +35,14 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public List<Mpa> getAllMpa() {
-        String sqlQuery = "select MPA_ID, MPA_NAME " +
-                "from MPA_RATINGS ";
+        String sqlQuery = "SELECT mpa_id, mpa_name " +
+                "FROM mpa_ratings ";
 
         return jdbcTemplate.query(sqlQuery, MpaDbStorage::makeMpa);
     }
 
     private static Mpa makeMpa(ResultSet rs, int rowNum) throws SQLException {
-        return new Mpa(rs.getInt("MPA_ID"),
-                rs.getString("MPA_NAME"));
+        return new Mpa(rs.getInt("mpa_id"),
+                rs.getString("mpa_name"));
     }
 }

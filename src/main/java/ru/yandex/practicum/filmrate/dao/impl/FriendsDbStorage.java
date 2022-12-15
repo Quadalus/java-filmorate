@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmrate.dao.impl.InDbImpl;
+package ru.yandex.practicum.filmrate.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,8 +24,8 @@ public class FriendsDbStorage implements FriendStorage {
 
     @Override
     public void addFriend(int userId, int friendId) {
-        String sqlQuery = "insert into USERS_FRIENDS(USER_ID, FRIEND_ID) " +
-                "values (?, ?)";
+        String sqlQuery = "INSERT INTO users_friends(user_id, friend_id) " +
+                "VALUES(?, ?)";
         jdbcTemplate.update(con -> {
             PreparedStatement stmt = con.prepareStatement(sqlQuery);
             stmt.setInt(1, userId);
@@ -36,17 +36,17 @@ public class FriendsDbStorage implements FriendStorage {
 
     @Override
     public void deleteFriend(int userId, int friendId) {
-        String sqlQuery = "delete from USERS_FRIENDS " +
-                "where USER_ID = ? " +
-                "and FRIEND_ID = ?";
+        String sqlQuery = "DELETE FROM users_friends " +
+                "WHERE user_id = ? " +
+                "AND friend_id = ?";
         jdbcTemplate.update(sqlQuery, userId, friendId);
     }
 
     @Override
     public Set<Integer> getFriends(int userId) {
-        String sqlQuery = "select * from USERS, USERS_FRIENDS " +
-                "where USERS.USER_ID = USERS_FRIENDS.FRIEND_ID " +
-                "and USERS_FRIENDS.USER_ID = ?";
+        String sqlQuery = "SELECT * FROM users, users_friends " +
+                "WHERE users.user_id = users_friends.friend_id " +
+                "AND users_friends.user_id = ?";
         return new HashSet<>(jdbcTemplate.query(sqlQuery, FriendsDbStorage::makeFriendId, userId));
     }
 
@@ -61,6 +61,6 @@ public class FriendsDbStorage implements FriendStorage {
     }
 
     private static Integer makeFriendId(ResultSet rs, int rowNum) throws SQLException {
-        return rs.getInt("FRIEND_ID");
+        return rs.getInt("friend_id");
     }
 }
