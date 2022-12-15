@@ -22,7 +22,7 @@ public class GenreDbStorage implements GenreStorage {
 
     @Override
     public Optional<Genre> getById(int id) {
-        String sqlQuery = "select GENRE_ID, NAME from GENRES " +
+        String sqlQuery = "select GENRE_ID, GENRE_NAME from GENRES " +
                 "where GENRE_ID = ?";
         List<Genre> genres = jdbcTemplate.query(sqlQuery, GenreDbStorage::makeGenre, id);
 
@@ -34,12 +34,17 @@ public class GenreDbStorage implements GenreStorage {
 
     @Override
     public List<Genre> getAllGenres() {
-        String sqlQuery = "select GENRE_ID, NAME from GENRES";
+        String sqlQuery = "select GENRE_ID, GENRE_NAME from GENRES";
         return jdbcTemplate.query(sqlQuery, GenreDbStorage::makeGenre);
     }
 
-    private static Genre makeGenre(ResultSet rs, int rowNum) throws SQLException {
+    static Genre makeGenre(ResultSet rs, int rowNum) throws SQLException {
         return new Genre(rs.getInt("GENRE_ID"),
-                rs.getString("NAME"));
+                rs.getString("GENRE_NAME"));
+    }
+
+    static Genre makeGenreForFilm(ResultSet rs) throws SQLException {
+        return new Genre(rs.getInt("GENRE_ID"),
+                rs.getString("GENRE_NAME"));
     }
 }

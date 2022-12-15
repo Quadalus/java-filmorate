@@ -9,5 +9,4 @@ public interface GenreStorage {
     Optional<Genre> getById(int id);
 
     List<Genre> getAllGenres();
-
 }

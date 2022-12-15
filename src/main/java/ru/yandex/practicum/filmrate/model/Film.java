@@ -6,6 +6,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,4 +27,19 @@ public class Film {
     private Integer duration;
     private Integer rate;
     private Mpa mpa;
+    private Set<Genre> genres = new HashSet<>();
+
+    public Film(Integer id, String name, String description, LocalDate releaseDate, Integer duration, Integer rate, Mpa mpa) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.rate = rate;
+        this.mpa = mpa;
+    }
+
+    public void setGenreToFilm(Genre genre) {
+        genres.add(genre);
+    }
 }

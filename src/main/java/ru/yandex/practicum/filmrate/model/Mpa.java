@@ -4,9 +4,9 @@ import lombok.*;
 
 @Setter
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Mpa {
     private Integer id;
     private String name;

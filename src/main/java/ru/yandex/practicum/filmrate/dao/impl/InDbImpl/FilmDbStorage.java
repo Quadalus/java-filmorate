@@ -15,6 +15,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.function.UnaryOperator.identity;
+import static ru.yandex.practicum.filmrate.dao.impl.InDbImpl.GenreDbStorage.makeGenreForFilm;
 
 @Repository
 public class FilmDbStorage implements FilmStorage {
@@ -90,8 +94,10 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public List<Film> getListFilms() {
         String sqlQuery = "select * from FILMS " +
-                "join MPA_RATINGS MR on FILMS.MPA_ID = MR.MPA_ID";
-        return jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm);
+                "join MPA_RATINGS MR on FILMS.MPA_ID = MR.MPA_ID ";
+        List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm);
+        addGenresToFilms(films);
+        return films;
     }
 
     @Override
@@ -105,7 +111,7 @@ public class FilmDbStorage implements FilmStorage {
         return filmMap;
     }
 
-    private static Film makeFilm(ResultSet rs, int rowNum) throws SQLException {
+    static Film makeFilm(ResultSet rs, int rowNum) throws SQLException {
         return new Film(rs.getInt("FILM_ID"),
                 rs.getString("NAME"),
                 rs.getString("DESCRIPTION"),
@@ -113,5 +119,19 @@ public class FilmDbStorage implements FilmStorage {
                 rs.getInt("DURATION"),
                 rs.getInt("RATE"),
                 new Mpa(rs.getInt("MPA_ID"), rs.getString("MPA_NAME")));
+    }
+
+    private void addGenresToFilms(List<Film> films) {
+        String filmIds = films.stream()
+                .map(Film::getId)
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+        final Map<Integer, Film> filmById = films.stream().collect(Collectors.toMap(Film::getId, identity()));
+        final String sqlQuery = "SELECT * FROM genres g, films_genres fg WHERE fg.GENRE_ID" +
+                " = g.GENRE_ID AND fg.film_id IN (" + filmIds + ")";
+        jdbcTemplate.query(sqlQuery, (rs) -> {
+            final Film film = filmById.get(rs.getInt("film_id"));
+            film.setGenreToFilm(makeGenreForFilm(rs));
+        });
     }
 }

@@ -2,12 +2,12 @@ package ru.yandex.practicum.filmrate.dao;
 
 import ru.yandex.practicum.filmrate.model.Genre;
 
-import java.util.List;
+import java.util.Set;
 
 public interface FilmGenreStorage {
-    List<Genre> getGenresByFilmId(int filmId);
+    Set<Genre> getGenresByFilmId(int filmId);
 
-    void addGenreToFilm(int filmId, List<Integer> genreList);
+    void addGenreToFilm(int filmId, Set<Genre> genreList);
 
     void deleteGenresByFilmId(int filmId);
 }
