@@ -1,2 +1,2 @@
 # Схема отношений java-filmorate
-![scheme_filmrate (7)](https://user-images.githubusercontent.com/102465685/207959026-3d616dbc-65b9-4161-b3f4-c96ade753397.png)
+![scheme_filmrate (8)](https://user-images.githubusercontent.com/102465685/207959169-d41b1a6c-a08b-425f-a986-aab78a3c2f2d.png)
