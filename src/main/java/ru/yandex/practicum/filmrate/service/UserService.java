@@ -71,7 +71,7 @@ public class UserService {
     }
 
     private void checkingUserInStorage(int id) {
-        if (!userStorage.getUserMap().containsKey(id)) {
+        if (id < 0) {
             throw new NotFoundException(String.format("Пользователя с id=%d нет", id));
         }
     }

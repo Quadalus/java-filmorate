@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmrate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmrate.dao.FilmGenreStorage;
 import ru.yandex.practicum.filmrate.dao.FilmStorage;
 import ru.yandex.practicum.filmrate.dao.LikeStorage;
 import ru.yandex.practicum.filmrate.dao.UserStorage;
@@ -17,15 +18,24 @@ public class FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
     private final LikeStorage likeStorage;
+    private final FilmGenreStorage filmGenreStorage;
 
     public Film addFilm(Film film) {
-        Film addedFilm = filmStorage.addFilm(film);
-        likeStorage.addFilmToRating(addedFilm.getId());
-        return  addedFilm;
+        Film newFilm = filmStorage.addFilm(film);
+        if (film.getGenres() != null) {
+            filmGenreStorage.addGenreToFilm(film.getId(), film.getGenres());
+        }
+        newFilm.setGenres(filmGenreStorage.getGenresByFilmId(newFilm.getId()));
+        return newFilm;
     }
 
     public Film updateFilm(Film film) {
-        return filmStorage.updateFilm(film);
+        Film updatedFilm = filmStorage.updateFilm(film);
+        if (film.getGenres() != null) {
+            filmGenreStorage.addGenreToFilm(film.getId(), film.getGenres());
+        }
+        updatedFilm.setGenres(filmGenreStorage.getGenresByFilmId(updatedFilm.getId()));
+        return updatedFilm;
     }
 
     public List<Film> findAllFilms() {
@@ -33,8 +43,10 @@ public class FilmService {
     }
 
     public Film findFilmById(int id) {
-        return filmStorage.getFilmById(id)
+         Film film = filmStorage.getFilmById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("Фильма с id=%d нет", id)));
+         film.setGenres(filmGenreStorage.getGenresByFilmId(film.getId()));
+        return film;
     }
 
     public void deleteAllFilms() {
@@ -42,7 +54,6 @@ public class FilmService {
     }
 
     public void deleteFilmById(int id) {
-        likeStorage.deleteFilmFromRating(id);
         filmStorage.deleteFilm(id);
     }
 

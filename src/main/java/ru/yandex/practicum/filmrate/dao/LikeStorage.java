@@ -9,8 +9,4 @@ public interface LikeStorage {
     void deleteLike(int filmId, int userId);
 
     List<Integer> getTopFilms(int count);
-
-    void addFilmToRating(int filmId);
-
-    void deleteFilmFromRating(int filmId);
 }
