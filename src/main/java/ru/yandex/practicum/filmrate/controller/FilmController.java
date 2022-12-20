@@ -28,8 +28,8 @@ public class FilmController {
 
 	@GetMapping("/director/{directorId}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Film> findAllFilms(@PathVariable int directorId,
-	                               @RequestParam(defaultValue = "year") String sortBy) {
+	public List<Film> findSortFilms(@PathVariable int directorId,
+	                                @RequestParam(defaultValue = "year") String sortBy) {
 		log.info("Список фильмов получен.");
 		return filmService.getSortFilms(directorId, sortBy);
 	}

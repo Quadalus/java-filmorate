@@ -29,7 +29,7 @@ public class DirectorController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public List<Director> getAllDirectors() {
-		log.info("Список директоров получен.");
+		log.info("Список режиссеров получен.");
 		return directorService.getAllDirectors();
 	}
 

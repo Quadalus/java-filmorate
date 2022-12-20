@@ -15,6 +15,7 @@ public class FilmService {
 	private final FilmStorage filmStorage;
 	private final UserStorage userStorage;
 	private final LikeStorage likeStorage;
+	private final DirectorStorage directorStorage;
 	private final FilmGenreStorage filmGenreStorage;
 	private final FilmDirectorStorage filmDirectorStorage;
 
@@ -23,7 +24,11 @@ public class FilmService {
 		if (film.getGenres() != null) {
 			filmGenreStorage.addGenreToFilm(film.getId(), film.getGenres());
 		}
+		if (film.getDirectors() != null) {
+			filmDirectorStorage.addDirectorsToFilm(film.getId(), film.getDirectors());
+		}
 		newFilm.setGenres(filmGenreStorage.getGenresByFilmId(newFilm.getId()));
+		newFilm.setDirectors(filmDirectorStorage.getDirectorsByFilmId(newFilm.getId()));
 		return newFilm;
 	}
 
@@ -32,7 +37,11 @@ public class FilmService {
 		if (film.getGenres() != null) {
 			filmGenreStorage.addGenreToFilm(film.getId(), film.getGenres());
 		}
+		if (film.getDirectors() != null) {
+			filmDirectorStorage.addDirectorsToFilm(film.getId(), film.getDirectors());
+		}
 		updatedFilm.setGenres(filmGenreStorage.getGenresByFilmId(updatedFilm.getId()));
+		updatedFilm.setDirectors(filmDirectorStorage.getDirectorsByFilmId(updatedFilm.getId()));
 		return updatedFilm;
 	}
 
@@ -44,6 +53,7 @@ public class FilmService {
 		Film film = filmStorage.getFilmById(id)
 				.orElseThrow(() -> new NotFoundException(String.format("Фильма с id=%d нет", id)));
 		film.setGenres(filmGenreStorage.getGenresByFilmId(film.getId()));
+		film.setDirectors(filmDirectorStorage.getDirectorsByFilmId(film.getId()));
 		return film;
 	}
 
@@ -74,8 +84,11 @@ public class FilmService {
 	}
 
 	public List<Film> getSortFilms(int idDirector, String typeSort) {
-		return filmDirectorStorage.getSortFilms(idDirector,
-				"year".equals(typeSort), "likes".equals(typeSort));
+		if (directorStorage.getById(idDirector).isPresent()) {
+			return filmDirectorStorage.getSortFilms(idDirector,
+					"year".equals(typeSort), "likes".equals(typeSort));
+		}
+		else throw new NotFoundException(String.format("Режиссер с id=%d не найден", idDirector));
 	}
 
 	private void checkingFilmInStorage(int filmId) {

@@ -31,7 +31,7 @@ public class DirectorDbStorage implements DirectorStorage {
 		String sqlQuery = "SELECT * " +
 				"FROM directors " +
 				"WHERE director_id = ?";
-		List<Director> directors = jdbcTemplate.query(sqlQuery, DirectorDbStorage::makeDirector, id);
+		List<Director> directors = jdbcTemplate.query(sqlQuery, DirectorDbStorage::makeDirectors, id);
 		if (directors.isEmpty()) {
 			return Optional.empty();
 		}
@@ -42,7 +42,7 @@ public class DirectorDbStorage implements DirectorStorage {
 	public List<Director> getAllDirectors() {
 		String sqlQuery = "SELECT * " +
 				"FROM directors";
-		return jdbcTemplate.query(sqlQuery, DirectorDbStorage::makeDirector);
+		return jdbcTemplate.query(sqlQuery, DirectorDbStorage::makeDirectors);
 	}
 
 	@Override
@@ -79,7 +79,12 @@ public class DirectorDbStorage implements DirectorStorage {
 		jdbcTemplate.update(sqlQuery, id);
 	}
 
-	static Director makeDirector(ResultSet rs, int rowNum) throws SQLException {
+	static Director makeDirectors(ResultSet rs, int rowNum) throws SQLException {
+		return new Director(rs.getInt("director_id"),
+				rs.getString("director_name"));
+	}
+
+	static Director makeDirector(ResultSet rs) throws SQLException {
 		return new Director(rs.getInt("director_id"),
 				rs.getString("director_name"));
 	}
