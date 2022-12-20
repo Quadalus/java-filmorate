@@ -123,7 +123,7 @@ public class FilmDbStorage implements FilmStorage {
                 new Mpa(rs.getInt("mpa_id"), rs.getString("mpa_name")));
     }
 
-    private void addGenresToFilms(List<Film> films) {
+    public void addGenresToFilms(List<Film> films) {
         String filmIds = films.stream()
                 .map(Film::getId)
                 .map(String::valueOf)
