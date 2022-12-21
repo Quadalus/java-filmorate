@@ -107,43 +107,21 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getRecommendedFilms(int userId) {
-        String sqlQuery = "select \n" +
-                "  * \n" +
-                "from \n" +
-                "  LIKES L \n" +
-                "  join FILMS F on F.FILM_ID = L.FILM_ID \n" +
-                "  join MPA_RATINGS MR on F.MPA_ID = MR.MPA_ID \n" +
-                "where \n" +
-                "  USER_ID = (\n" +
-                "    select \n" +
-                "      USER_ID \n" +
-                "    from \n" +
-                "      LIKES \n" +
-                "    where \n" +
-                "      FILM_ID in (\n" +
-                "        select \n" +
-                "          FILM_ID \n" +
-                "        from \n" +
-                "          LIKES \n" +
-                "        where \n" +
-                "          USER_ID = ?\n" +
-                "      ) \n" +
-                "      and USER_ID <> ? \n" +
-                "    group by \n" +
-                "      USER_ID \n" +
-                "    order by \n" +
-                "      count(FILM_ID) desc \n" +
-                "    limit \n" +
-                "      1\n" +
-                "  ) \n" +
-                "  and L.FILM_ID not in (\n" +
-                "    select \n" +
-                "      FILM_ID \n" +
-                "    from \n" +
-                "      likes \n" +
-                "    where \n" +
-                "      USER_ID = ?\n" +
-                "  );\n";
+		String sqlQuery = "SELECT * FROM likes l " +
+				"  JOIN films f ON f.film_id = l.film_id " +
+				"  JOIN mpa_ratings mr ON f.mpa_id = mr.mpa_id " +
+				"WHERE user_id = (" +
+				"    SELECT user_id FROM likes " +
+				"    WHERE film_id IN (" +
+				"        SELECT film_id FROM likes " +
+				"        WHERE user_id = ?) " +
+				"        AND user_id <> ? " +
+				"    GROUP BY user_id " +
+				"    ORDER BY COUNT(film_id) DESC " +
+				"    LIMIT 1) " +
+				"AND l.film_id NOT IN (" +
+				"    SELECT film_id FROM likes " +
+				"    WHERE user_id = ?);";
         List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, userId, userId, userId);
         addGenresToFilms(films);
         return films;
