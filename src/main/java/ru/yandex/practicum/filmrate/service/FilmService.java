@@ -85,10 +85,12 @@ public class FilmService {
 
 	public List<Film> getSortFilms(int idDirector, String typeSort) {
 		if (directorStorage.getById(idDirector).isPresent()) {
-			return filmDirectorStorage.getSortFilms(idDirector,
+			List<Film> films = filmDirectorStorage.getSortFilms(idDirector,
 					"year".equals(typeSort), "likes".equals(typeSort));
-		}
-		else throw new NotFoundException(String.format("Режиссер с id=%d не найден", idDirector));
+			filmStorage.addGenresToFilms(films);
+			filmStorage.addDirectorsToFilms(films);
+			return films;
+		} else throw new NotFoundException(String.format("Режиссер с id=%d не найден", idDirector));
 	}
 
 	private void checkingFilmInStorage(int filmId) {

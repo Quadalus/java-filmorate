@@ -58,7 +58,7 @@ public class FilmGenreStorageTest {
                 .genres(new LinkedHashSet<>(Set.of(new Genre(1, "Комедия"))))
                 .build();
 
-        filmStorage.addFilm(testFilm);
+        Film film = filmStorage.addFilm(testFilm);
         filmGenreStorage.addGenreToFilm(testFilm.getId(), testFilm.getGenres());
         var filmGenres = filmGenreStorage.getGenresByFilmId(testFilm.getId());
         var genres = Set.of(new Genre(1, "Комедия"));
@@ -67,7 +67,7 @@ public class FilmGenreStorageTest {
         assertEquals(genres, filmGenres);
 
         Film updatedFilm = Film.builder()
-                .id(1)
+                .id(film.getId())
                 .name("Test Film Name")
                 .description("test film 1")
                 .releaseDate(LocalDate.of(2022, 1, 1))
@@ -78,13 +78,13 @@ public class FilmGenreStorageTest {
                 .build();
 
         filmStorage.updateFilm(updatedFilm);
-        testFilm = filmStorage.getFilmById(1).get();
+        testFilm = filmStorage.getFilmById(film.getId()).get();
         filmGenreStorage.addGenreToFilm(updatedFilm.getId(), updatedFilm.getGenres());
         filmGenres = filmGenreStorage.getGenresByFilmId(updatedFilm.getId());
         testFilm.setGenres(filmGenres);
         genres = Set.of(new Genre(1, "Комедия"), new Genre(2, "Боевик"));
 
-        assertEquals(1, testFilm.getId());
+        assertEquals(film.getId(), testFilm.getId());
         assertEquals(1, filmStorage.getListFilms().size());
         assertEquals(2, testFilm.getGenres().size());
         assertEquals(genres, filmGenres);

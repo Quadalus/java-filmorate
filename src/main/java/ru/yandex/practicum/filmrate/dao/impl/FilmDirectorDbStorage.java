@@ -18,12 +18,10 @@ import java.util.stream.Collectors;
 @Repository
 public class FilmDirectorDbStorage implements FilmDirectorStorage {
 	private final JdbcTemplate jdbcTemplate;
-	private final FilmDbStorage filmDbStorage;
 
 	@Autowired
-	public FilmDirectorDbStorage(JdbcTemplate jdbcTemplate, FilmDbStorage filmDbStorage) {
+	public FilmDirectorDbStorage(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
-		this.filmDbStorage = filmDbStorage;
 	}
 
 	public Set<Director> getDirectorsByFilmId(Integer id) {
@@ -59,10 +57,7 @@ public class FilmDirectorDbStorage implements FilmDirectorStorage {
 		} else if (isSortLikes) {
 			sqlQuery += "f.rate DESC ";
 		}
-		List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, idDirector);
-		filmDbStorage.addGenresToFilms(films);
-		filmDbStorage.addDirectorsToFilms(films);
-		return films;
+		return jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, idDirector);
 	}
 
 	@Override
