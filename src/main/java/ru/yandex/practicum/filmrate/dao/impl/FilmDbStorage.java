@@ -105,6 +105,54 @@ public class FilmDbStorage implements FilmStorage {
 		return films;
 	}
 
+    @Override
+    public List<Film> getRecommendedFilms(int userId) {
+        String sqlQuery = "select \n" +
+                "  * \n" +
+                "from \n" +
+                "  LIKES L \n" +
+                "  join FILMS F on F.FILM_ID = L.FILM_ID \n" +
+                "  join MPA_RATINGS MR on F.MPA_ID = MR.MPA_ID \n" +
+                "where \n" +
+                "  USER_ID = (\n" +
+                "    select \n" +
+                "      USER_ID \n" +
+                "    from \n" +
+                "      LIKES \n" +
+                "    where \n" +
+                "      FILM_ID in (\n" +
+                "        select \n" +
+                "          FILM_ID \n" +
+                "        from \n" +
+                "          LIKES \n" +
+                "        where \n" +
+                "          USER_ID = ?\n" +
+                "      ) \n" +
+                "      and USER_ID <> ? \n" +
+                "    group by \n" +
+                "      USER_ID \n" +
+                "    order by \n" +
+                "      count(FILM_ID) desc \n" +
+                "    limit \n" +
+                "      1\n" +
+                "  ) \n" +
+                "  and L.FILM_ID not in (\n" +
+                "    select \n" +
+                "      FILM_ID \n" +
+                "    from \n" +
+                "      likes \n" +
+                "    where \n" +
+                "      USER_ID = ?\n" +
+                "  );\n";
+        List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, userId, userId, userId);
+        addGenresToFilms(films);
+        return films;
+    }
+
+    @Override
+    public Map<Integer, Film> getFilmMap() {
+        List<Film> films = getListFilms();
+        Map<Integer, Film> filmMap = new HashMap<>();
 	@Override
 	public Map<Integer, Film> getFilmMap() {
 		List<Film> films = getListFilms();
