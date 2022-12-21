@@ -149,10 +149,6 @@ public class FilmDbStorage implements FilmStorage {
         return films;
     }
 
-    @Override
-    public Map<Integer, Film> getFilmMap() {
-        List<Film> films = getListFilms();
-        Map<Integer, Film> filmMap = new HashMap<>();
 	@Override
 	public Map<Integer, Film> getFilmMap() {
 		List<Film> films = getListFilms();
