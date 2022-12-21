@@ -51,11 +51,11 @@ public class FilmStorageTest {
                 .rate(4)
                 .mpa(new Mpa(1, "R"))
                 .build();
-        filmStorage.addFilm(testFilm);
+        Film film = filmStorage.addFilm(testFilm);
 
 
         Film updatedFilm = Film.builder()
-                .id(1)
+                .id(film.getId())
                 .name("Test Film Name")
                 .description("test updated film 1")
                 .releaseDate(LocalDate.of(2022, 1, 1))
@@ -65,7 +65,7 @@ public class FilmStorageTest {
                 .build();
         filmStorage.updateFilm(updatedFilm);
         assertEquals("NC-17", updatedFilm.getMpa().getName());
-        assertEquals(1, updatedFilm.getId());
+        assertEquals(film.getId(), updatedFilm.getId());
         assertEquals(1, filmStorage.getListFilms().size());
 
         System.out.println(updatedFilm);
