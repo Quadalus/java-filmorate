@@ -21,7 +21,11 @@ public interface FilmStorage {
 
 	Map<Integer, Film> getFilmMap();
 
+	List<Film> getRecommendedFilms(int userId);
+
 	void addGenresToFilms(List<Film> films);
 
 	void addDirectorsToFilms(List<Film> films);
+
+
 }

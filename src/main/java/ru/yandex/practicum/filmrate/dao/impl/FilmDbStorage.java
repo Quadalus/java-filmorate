@@ -105,6 +105,28 @@ public class FilmDbStorage implements FilmStorage {
 		return films;
 	}
 
+    @Override
+    public List<Film> getRecommendedFilms(int userId) {
+		String sqlQuery = "SELECT * FROM likes l " +
+				"  JOIN films f ON f.film_id = l.film_id " +
+				"  JOIN mpa_ratings mr ON f.mpa_id = mr.mpa_id " +
+				"WHERE user_id = (" +
+				"    SELECT user_id FROM likes " +
+				"    WHERE film_id IN (" +
+				"        SELECT film_id FROM likes " +
+				"        WHERE user_id = ?) " +
+				"        AND user_id <> ? " +
+				"    GROUP BY user_id " +
+				"    ORDER BY COUNT(film_id) DESC " +
+				"    LIMIT 1) " +
+				"AND l.film_id NOT IN (" +
+				"    SELECT film_id FROM likes " +
+				"    WHERE user_id = ?);";
+        List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, userId, userId, userId);
+        addGenresToFilms(films);
+        return films;
+    }
+
 	@Override
 	public Map<Integer, Film> getFilmMap() {
 		List<Film> films = getListFilms();

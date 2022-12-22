@@ -2,9 +2,11 @@ package ru.yandex.practicum.filmrate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmrate.dao.FilmStorage;
 import ru.yandex.practicum.filmrate.dao.UserStorage;
 import ru.yandex.practicum.filmrate.dao.FriendStorage;
 import ru.yandex.practicum.filmrate.exception.NotFoundException;
+import ru.yandex.practicum.filmrate.model.Film;
 import ru.yandex.practicum.filmrate.model.User;
 
 import java.util.List;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserStorage userStorage;
     private final FriendStorage friendStorage;
+
+    private final FilmStorage filmStorage;
 
     public List<User> findAllUser() {
         return userStorage.getAllUsers();
@@ -68,6 +72,11 @@ public class UserService {
                 .stream()
                 .map(userStorage.getUserMap()::get)
                 .collect(Collectors.toList());
+    }
+
+    public List<Film> getRecommendedFilms(int userId) {
+        checkingUserInStorage(userId);
+        return filmStorage.getRecommendedFilms(userId);
     }
 
     private void checkingUserInStorage(int id) {

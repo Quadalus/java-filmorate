@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmrate.model.Film;
 import ru.yandex.practicum.filmrate.model.User;
 import ru.yandex.practicum.filmrate.service.UserService;
 import ru.yandex.practicum.filmrate.service.ValidationService;
@@ -95,5 +96,12 @@ public class UserController {
                              @PathVariable int friendId) {
         log.info("Пользователь с id={} удалил из друзей пользователя с id={}", id, friendId);
         userService.deleteFriend(id, friendId);
+    }
+
+    @GetMapping("/{id}/recommendations")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Film> getRecommendedFilms(@PathVariable(name = "id") int userId){
+        log.info("Пользователь с id={} получил список рекомендованных фильмов", userId);
+        return userService.getRecommendedFilms(userId);
     }
 }
