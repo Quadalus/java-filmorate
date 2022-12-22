@@ -46,7 +46,7 @@ public class LikeDbStorage implements LikeStorage {
         String sqlQuery = "SELECT * FROM films AS f " +
                 "LEFT JOIN MPA_RATINGS AS m ON m.mpa_id = f.FILM_ID " +
                 "LEFT JOIN likes l on f.film_id = l.film_id " +
-                "GROUP BY f.film_id " +
+                "GROUP BY f.film_id, l.user_id " +
                 "ORDER BY COUNT(l.film_id) " +
                 "DESC LIMIT ?;";
         return jdbcTemplate.query(sqlQuery, LikeDbStorage::makeLike, count);
