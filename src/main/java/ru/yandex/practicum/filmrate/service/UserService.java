@@ -83,5 +83,6 @@ public class UserService {
         if (id < 0) {
             throw new NotFoundException(String.format("Пользователя с id=%d нет", id));
         }
+        findUserById(id);
     }
 }
