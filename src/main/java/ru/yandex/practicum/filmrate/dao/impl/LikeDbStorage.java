@@ -42,10 +42,15 @@ public class LikeDbStorage implements LikeStorage {
     }
 
     @Override
-    public List<Integer> getTopFilms(int count) {
+    public List<Integer> getTopFilms(int count, int genreId, int year) {
+        String genreCondition = "AND f.film_id IN (SELECT fg.film_id FROM films_genres fg WHERE genre_id = "+genreId+" AND fg.film_id = f.film_id) ";
+        String yearCondition = "AND EXTRACT(YEAR FROM f.releasedate) = "+year+" ";
         String sqlQuery = "SELECT * FROM films AS f " +
-                "LEFT JOIN MPA_RATINGS AS m ON m.mpa_id = f.FILM_ID " +
+                "LEFT JOIN mpa_ratings AS m ON m.mpa_id = f.film_id " +
                 "LEFT JOIN likes l on f.film_id = l.film_id " +
+                "WHERE 1=1 " +
+                (genreId == 0 ? "" : genreCondition) +
+                (year ==0 ? "" : yearCondition) +
                 "GROUP BY f.film_id, l.user_id " +
                 "ORDER BY COUNT(l.film_id) " +
                 "DESC LIMIT ?;";

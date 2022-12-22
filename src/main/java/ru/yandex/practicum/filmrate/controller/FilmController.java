@@ -92,9 +92,11 @@ public class FilmController {
 
 	@GetMapping("/popular")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Film> getTopFilms(@RequestParam(required = false, defaultValue = "10") int count) {
+	public List<Film> getTopFilms(@RequestParam(required = false, defaultValue = "10") int count,
+								  @RequestParam(required = false, defaultValue = "0") int genreId,
+								  @RequestParam(required = false, defaultValue = "0") int year) {
 		validationService.validateCount(count);
 		log.info("Список популярных фильмов получен.");
-		return filmService.getBestFilms(count);
+		return filmService.getBestFilms(count, genreId, year);
 	}
 }
