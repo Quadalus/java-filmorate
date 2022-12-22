@@ -77,8 +77,8 @@ public class FilmService {
 		likeStorage.deleteLike(filmId, userId);
 	}
 
-	public List<Film> getBestFilms(int count) {
-		return likeStorage.getTopFilms(count).stream()
+	public List<Film> getBestFilms(int count, int genreId, int year) {
+		return likeStorage.getTopFilms(count, genreId, year).stream()
 				.map(filmStorage.getFilmMap()::get)
 				.collect(Collectors.toList());
 	}
