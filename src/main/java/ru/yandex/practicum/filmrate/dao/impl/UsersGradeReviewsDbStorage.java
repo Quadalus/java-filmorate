@@ -88,7 +88,6 @@ public class UsersGradeReviewsDbStorage implements UsersGradeReviewsStorage {
 				"WHERE (review_id = ?) AND (user_id= ?)", reviewId, userId);
 
 		updateUsefulForReview(reviewId, usersGradeReviews.getGrade());
-
 	}
 
 	static UsersGradeReviews makeUsersGradeReviews(ResultSet rs, int rowNum) throws SQLException {

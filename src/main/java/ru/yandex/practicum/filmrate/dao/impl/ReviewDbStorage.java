@@ -27,12 +27,11 @@ public class ReviewDbStorage implements ReviewStorage {
 
 	@Override
 	public Review addReview(Review review) {
-
 		String sqlQuery = "INSERT INTO reviews(content,isPositive,user_id,film_id,useful) " +
 				"VALUES (?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
-			PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"director_id"});
+			PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"review_id"});
 			stmt.setString(1, review.getContent());
 			stmt.setBoolean(2, review.getIsPositive());
 			stmt.setInt(3, review.getUserId());
@@ -40,21 +39,22 @@ public class ReviewDbStorage implements ReviewStorage {
 			stmt.setInt(5, review.getUseful());
 			return stmt;
 		}, keyHolder);
-		review.setId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+		review.setReviewId(Objects.requireNonNull(keyHolder.getKey()).intValue());
 		return review;
 	}
 
 	@Override
 	public Review updateReview(Review review) {
 		String sqlQuery = "UPDATE reviews " +
-				"SET content=?, isPositive=?, user_id=? ,film_id=?, useful=?" +
+				"SET content=?, isPositive=?" +
 				"WHERE review_id = ?";
 		int result = jdbcTemplate.update(sqlQuery, review.getContent(), review.getIsPositive(),
-				review.getUserId(), review.getFilmId(), review.getUseful());
+				review.getReviewId());
 		if (result != 1) {
 			throw new NotFoundException("Невозможно обновить отзыв");
 		}
-		return review;
+		return getReviewById(review.getReviewId())
+				.orElseThrow(() -> new NotFoundException(String.format("Невозможно получить отзыв с id=%d", review.getReviewId())));
 	}
 
 	@Override
@@ -82,15 +82,16 @@ public class ReviewDbStorage implements ReviewStorage {
 				"FROM reviews " +
 				"WHERE 1=1 ");
 		if (filmId > 0) {
-			sqlQuery.append("AND film_id=? ");
+			sqlQuery.append("AND film_id=").append(filmId);
 		}
-		sqlQuery.append("LIMIT ?");
-		return jdbcTemplate.query(sqlQuery.toString(), ReviewDbStorage::makeReviews, filmId, count);
+		sqlQuery.append("ORDER BY useful DESC " +
+				"LIMIT ?");
+		return jdbcTemplate.query(sqlQuery.toString(), ReviewDbStorage::makeReviews, count);
 	}
 
 	static Review makeReviews(ResultSet rs, int rowNum) throws SQLException {
 		return Review.builder()
-				.id(rs.getInt("review_id"))
+				.reviewId(rs.getInt("review_id"))
 				.content(rs.getString("content"))
 				.isPositive(rs.getBoolean("isPositive"))
 				.userId(rs.getInt("user_id"))
