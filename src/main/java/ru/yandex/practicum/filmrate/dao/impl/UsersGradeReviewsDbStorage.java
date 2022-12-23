@@ -41,8 +41,8 @@ public class UsersGradeReviewsDbStorage implements UsersGradeReviewsStorage {
 				"VALUES (?, ?, ?)";
 		jdbcTemplate.update(con -> {
 			PreparedStatement stmt = con.prepareStatement(sqlQuery);
-			stmt.setInt(1, reviewId);
-			stmt.setInt(2, userId);
+			stmt.setInt(1, userId);
+			stmt.setInt(2, reviewId);
 			stmt.setInt(3, like);
 			return stmt;
 		});
@@ -87,7 +87,7 @@ public class UsersGradeReviewsDbStorage implements UsersGradeReviewsStorage {
 		jdbcTemplate.update("DELETE FROM users_grade_reviews " +
 				"WHERE (review_id = ?) AND (user_id= ?)", reviewId, userId);
 
-		updateUsefulForReview(reviewId, usersGradeReviews.getGrade());
+		updateUsefulForReview(reviewId, -usersGradeReviews.getGrade());
 	}
 
 	static UsersGradeReviews makeUsersGradeReviews(ResultSet rs, int rowNum) throws SQLException {
