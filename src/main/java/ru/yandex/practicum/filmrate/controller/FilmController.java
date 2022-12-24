@@ -99,4 +99,12 @@ public class FilmController {
 		log.info("Список популярных фильмов получен.");
 		return filmService.getBestFilms(count, genreId, year);
 	}
+
+	@GetMapping("/search")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Film> searchFilm(@RequestParam String query,
+								@RequestParam(defaultValue = "title") String by) {
+		log.info("Список популярных фильмов получен.");
+		return filmService.searchFilm(query, by);
+	}
 }

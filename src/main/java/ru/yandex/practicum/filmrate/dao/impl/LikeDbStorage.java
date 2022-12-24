@@ -48,9 +48,9 @@ public class LikeDbStorage implements LikeStorage {
         String sqlQuery = "SELECT * FROM films AS f " +
                 "LEFT JOIN mpa_ratings AS m ON m.mpa_id = f.film_id " +
                 "LEFT JOIN likes l on f.film_id = l.film_id " +
-                "WHERE 1=1 " +
+                "WHERE 1 = 1 " +
                 (genreId == 0 ? "" : genreCondition) +
-                (year ==0 ? "" : yearCondition) +
+                (year == 0 ? "" : yearCondition) +
                 "GROUP BY f.film_id, l.user_id " +
                 "ORDER BY COUNT(l.film_id) " +
                 "DESC LIMIT ?;";
