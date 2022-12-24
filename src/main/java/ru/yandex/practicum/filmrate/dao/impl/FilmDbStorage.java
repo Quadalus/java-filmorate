@@ -142,10 +142,26 @@ public class FilmDbStorage implements FilmStorage {
 		String sqlQuery = sqlQueryBySearchParameters(searchParameters);
 		String searchQuery = "%" + query.toLowerCase() + "%";
 		List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, searchQuery);
-        addGenresToFilms(new ArrayList<>(films));
-        addDirectorsToFilms(new ArrayList<>(films));
+        addGenresToFilms(films);
+        addDirectorsToFilms(films);
         return films;
     }
+
+	@Override
+	public List<Film> getCommonFilms(int userId, int friendId) {
+		String sqlQuery = "SELECT f.*, mr.mpa_name " +
+				"FROM likes AS l " +
+				"JOIN films f ON f.film_id = l.film_id " +
+				"JOIN MPA_RATINGS mr ON f.mpa_id = mr.mpa_id " +
+				"WHERE l.user_id = ? " +
+				"OR l.user_id = ? " +
+				"GROUP BY l.film_id " +
+				"HAVING COUNT(l.film_id) > 1 ";
+		List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, userId, friendId);
+		addGenresToFilms(films);
+		addDirectorsToFilms(films);
+		return films;
+	}
 
 	private static String sqlQueryBySearchParameters(String searchParameters) {
 		String[] param = searchParameters.split(",");
