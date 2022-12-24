@@ -138,6 +138,49 @@ public class FilmDbStorage implements FilmStorage {
 		return filmMap;
 	}
 
+	public List<Film> searchFilm(String query, String searchParameters) {
+		String sqlQuery = sqlQueryBySearchParameters(searchParameters);
+		String searchQuery = "%" + query.toLowerCase() + "%";
+		List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, searchQuery);
+        addGenresToFilms(new ArrayList<>(films));
+        addDirectorsToFilms(new ArrayList<>(films));
+        return films;
+    }
+
+	private static String sqlQueryBySearchParameters(String searchParameters) {
+		String[] param = searchParameters.split(",");
+		String sqlQuery = "";
+
+		if (param.length == 1 && param[0].equals("title")) {
+			sqlQuery = "SELECT f.film_id, f.name, f.description, f.releasedate, f.duration, f.rate, f.mpa_id, mr.mpa_name " +
+                    "FROM films AS f " +
+                    "JOIN mpa_ratings AS mr ON f.mpa_id = mr.mpa_id " +
+					"WHERE LOWER(f.name) LIKE ? " +
+					"ORDER BY rate";
+		}
+
+		if (param.length == 1 && param[0].equals("director")) {
+			sqlQuery = "SELECT f.film_id, f.name, f.description, f.releasedate, f.duration, f.rate, f.mpa_id, d.director_name, mr.mpa_name " +
+                    "FROM films AS f " +
+					"JOIN directors_film df ON f.film_id = df.film_id " +
+					"JOIN directors d ON d.director_id = df.director_id " +
+                    "JOIN mpa_ratings AS mr ON f.mpa_id = mr.mpa_id " +
+					"WHERE LOWER(d.director_name) LIKE ? " +
+					"ORDER BY rate";
+		}
+
+		if (param.length == 2) {
+			sqlQuery = "SELECT f.film_id, f.name, f.description, f.releasedate, f.duration, f.rate, f.mpa_id, d.director_name, mr.mpa_name " +
+                    "FROM films AS f " +
+					"LEFT JOIN directors_film df ON f.film_id = df.film_id " +
+					"LEFT JOIN directors d ON d.director_id = df.director_id " +
+					"LEFT JOIN mpa_ratings AS mr ON f.mpa_id = mr.mpa_id " +
+					"WHERE LOWER(CONCAT(f.name, d.director_name)) LIKE ? " +
+					"ORDER BY rate";
+		}
+		return sqlQuery;
+	}
+
 	static Film makeFilm(ResultSet rs, int rowNum) throws SQLException {
 		return new Film(rs.getInt("film_id"),
 				rs.getString("name"),

@@ -27,5 +27,5 @@ public interface FilmStorage {
 
 	void addDirectorsToFilms(List<Film> films);
 
-
+	List<Film> searchFilm(String query, String searchParameters);
 }
