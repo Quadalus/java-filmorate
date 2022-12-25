@@ -89,6 +89,10 @@ public class FilmService {
         return filmStorage.searchFilm(searchQuery, searchParam);
     }
 
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        return filmStorage.getCommonFilms(userId, friendId);
+    }
+
     private void checkingFilmInStorage(int filmId) {
         if (!filmStorage.getFilmMap().containsKey(filmId)) {
             throw new NotFoundException(String.format("Фильма с id=%d нет", filmId));
