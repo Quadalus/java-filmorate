@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmrate.model;
 
 import lombok.*;
 
-
 @Getter
 @Setter
 @Builder

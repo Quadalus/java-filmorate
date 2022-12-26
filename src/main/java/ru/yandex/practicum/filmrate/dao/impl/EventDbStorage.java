@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmrate.dao.impl;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -21,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 
 @Repository
-@Slf4j
 public class EventDbStorage implements EventStorage {
 	private final JdbcTemplate jdbcTemplate;
 	private HashMap<String, Integer> eventOperation = new HashMap<>();
@@ -39,7 +37,7 @@ public class EventDbStorage implements EventStorage {
 	}
 
 	@Override
-	public List<Event> getUserEvents(long id) {
+	public List<Event> getUserEvents(int id) {
 		return jdbcTemplate.query("SELECT fe.event_id, fe.time_feed, " +
 						"et.name AS event_type,o.name AS event_operation , fe.user_id,fe.entity_id " +
 						"FROM feed AS fe " +

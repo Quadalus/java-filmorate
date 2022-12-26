@@ -15,11 +15,12 @@ public class FeedService {
 	private final EventStorage eventStorage;
 	private final UserStorage userStorage;
 
-	public List<Event> getUserEvents(long id) {
+	public List<Event> getUserEvents(int id) {
 		if (userStorage.getUserById(Math.toIntExact(id)).isPresent()) {
 			return eventStorage.getUserEvents(id);
-		} else throw new NotFoundException(String.format("Невозможно получить пользователя с id=%d", id));
-
+		} else {
+			throw new NotFoundException(String.format("Невозможно получить пользователя с id=%d", id));
+		}
 	}
 
 	public void addEvent(Event event) {
