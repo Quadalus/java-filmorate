@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmrate.model.Event;
 import ru.yandex.practicum.filmrate.model.Film;
 import ru.yandex.practicum.filmrate.model.User;
+import ru.yandex.practicum.filmrate.service.FeedService;
 import ru.yandex.practicum.filmrate.service.UserService;
 import ru.yandex.practicum.filmrate.service.ValidationService;
 
@@ -19,6 +21,7 @@ import java.util.List;
 public class UserController {
 	private final UserService userService;
 	private final ValidationService validationService;
+	private final FeedService feedService;
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
@@ -103,5 +106,12 @@ public class UserController {
 	public List<Film> getRecommendedFilms(@PathVariable(name = "id") int userId) {
 		log.info("Пользователь с id={} получил список рекомендованных фильмов", userId);
 		return userService.getRecommendedFilms(userId);
+	}
+
+	@GetMapping("/{id}/feed")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Event> getUserEvents(@PathVariable int id) {
+		log.info("Лента событий для пользователя с id={} получена", id);
+		return feedService.getUserEvents(id);
 	}
 }
