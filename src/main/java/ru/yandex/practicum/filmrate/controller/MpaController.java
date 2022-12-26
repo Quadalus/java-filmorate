@@ -2,7 +2,10 @@ package ru.yandex.practicum.filmrate.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmrate.model.Mpa;
 import ru.yandex.practicum.filmrate.service.MpaService;
 
@@ -13,17 +16,17 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class MpaController {
-    private final MpaService mpaService;
+	private final MpaService mpaService;
 
-    @GetMapping("/{id}")
-    public Mpa findMpaById(@PathVariable int id) {
-        log.info("Mpa с {} получен.", id);
-        return mpaService.findMpaById(id);
-    }
+	@GetMapping("/{id}")
+	public Mpa findMpaById(@PathVariable int id) {
+		log.info("Mpa с {} получен.", id);
+		return mpaService.findMpaById(id);
+	}
 
-    @GetMapping
-    public List<Mpa> findAllMpa() {
-        log.info("Список с mpa получен.");
-        return mpaService.getAllMpa();
-    }
+	@GetMapping
+	public List<Mpa> findAllMpa() {
+		log.info("Список с mpa получен.");
+		return mpaService.getAllMpa();
+	}
 }

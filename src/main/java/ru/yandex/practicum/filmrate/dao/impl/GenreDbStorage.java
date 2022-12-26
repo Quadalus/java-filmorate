@@ -13,38 +13,38 @@ import java.util.Optional;
 
 @Repository
 public class GenreDbStorage implements GenreStorage {
-    private final JdbcTemplate jdbcTemplate;
+	private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public GenreDbStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+	@Autowired
+	public GenreDbStorage(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
 
-    @Override
-    public Optional<Genre> getById(int id) {
-        String sqlQuery = "SELECT genre_id, genre_name FROM genres " +
-                "WHERE genre_id = ?";
-        List<Genre> genres = jdbcTemplate.query(sqlQuery, GenreDbStorage::makeGenre, id);
+	@Override
+	public Optional<Genre> getById(int id) {
+		String sqlQuery = "SELECT genre_id, genre_name FROM genres " +
+				"WHERE genre_id = ?";
+		List<Genre> genres = jdbcTemplate.query(sqlQuery, GenreDbStorage::makeGenre, id);
 
-        if (genres.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(genres.get(0));
-    }
+		if (genres.isEmpty()) {
+			return Optional.empty();
+		}
+		return Optional.of(genres.get(0));
+	}
 
-    @Override
-    public List<Genre> getAllGenres() {
-        String sqlQuery = "SELECT genre_id, genre_name FROM genres";
-        return jdbcTemplate.query(sqlQuery, GenreDbStorage::makeGenre);
-    }
+	@Override
+	public List<Genre> getAllGenres() {
+		String sqlQuery = "SELECT genre_id, genre_name FROM genres";
+		return jdbcTemplate.query(sqlQuery, GenreDbStorage::makeGenre);
+	}
 
-    static Genre makeGenre(ResultSet rs, int rowNum) throws SQLException {
-        return new Genre(rs.getInt("genre_id"),
-                rs.getString("genre_name"));
-    }
+	static Genre makeGenre(ResultSet rs, int rowNum) throws SQLException {
+		return new Genre(rs.getInt("genre_id"),
+				rs.getString("genre_name"));
+	}
 
-    static Genre makeGenreForFilm(ResultSet rs) throws SQLException {
-        return new Genre(rs.getInt("genre_id"),
-                rs.getString("genre_name"));
-    }
+	static Genre makeGenreForFilm(ResultSet rs) throws SQLException {
+		return new Genre(rs.getInt("genre_id"),
+				rs.getString("genre_name"));
+	}
 }

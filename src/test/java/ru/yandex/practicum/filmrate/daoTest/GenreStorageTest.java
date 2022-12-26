@@ -13,16 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class GenreStorageTest {
-    private final GenreStorage genreStorage;
+	private final GenreStorage genreStorage;
 
-    @Test
-    void getGenreById() {
-        assertEquals("Комедия", genreStorage.getById(1).get().getName());
-        assertEquals("Боевик", genreStorage.getById(6).get().getName());
-    }
+	@Test
+	void getGenreById() {
+		assertEquals("Комедия", genreStorage.getById(1).get().getName());
+		assertEquals("Боевик", genreStorage.getById(6).get().getName());
+	}
 
-    @Test
-    void getAllGenres() {
-        assertEquals(6, genreStorage.getAllGenres().size());
-    }
+	@Test
+	void getAllGenres() {
+		assertEquals(6, genreStorage.getAllGenres().size());
+	}
 }

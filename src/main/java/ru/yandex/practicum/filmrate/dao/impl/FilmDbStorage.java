@@ -105,8 +105,8 @@ public class FilmDbStorage implements FilmStorage {
 		return films;
 	}
 
-    @Override
-    public List<Film> getRecommendedFilms(int userId) {
+	@Override
+	public List<Film> getRecommendedFilms(int userId) {
 		String sqlQuery = "SELECT * FROM likes l " +
 				"  JOIN films f ON f.film_id = l.film_id " +
 				"  JOIN mpa_ratings mr ON f.mpa_id = mr.mpa_id " +
@@ -122,10 +122,10 @@ public class FilmDbStorage implements FilmStorage {
 				"AND l.film_id NOT IN (" +
 				"    SELECT film_id FROM likes " +
 				"    WHERE user_id = ?);";
-        List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, userId, userId, userId);
-        addGenresToFilms(films);
-        return films;
-    }
+		List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, userId, userId, userId);
+		addGenresToFilms(films);
+		return films;
+	}
 
 	@Override
 	public Map<Integer, Film> getFilmMap() {
@@ -142,10 +142,10 @@ public class FilmDbStorage implements FilmStorage {
 		String sqlQuery = sqlQueryBySearchParameters(searchParameters);
 		String searchQuery = "%" + query.toLowerCase() + "%";
 		List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, searchQuery);
-        addGenresToFilms(films);
-        addDirectorsToFilms(films);
-        return films;
-    }
+		addGenresToFilms(films);
+		addDirectorsToFilms(films);
+		return films;
+	}
 
 	@Override
 	public List<Film> getCommonFilms(int userId, int friendId) {
@@ -169,25 +169,25 @@ public class FilmDbStorage implements FilmStorage {
 
 		if (param.length == 1 && param[0].equals("title")) {
 			sqlQuery = "SELECT f.film_id, f.name, f.description, f.releasedate, f.duration, f.rate, f.mpa_id, mr.mpa_name " +
-                    "FROM films AS f " +
-                    "JOIN mpa_ratings AS mr ON f.mpa_id = mr.mpa_id " +
+					"FROM films AS f " +
+					"JOIN mpa_ratings AS mr ON f.mpa_id = mr.mpa_id " +
 					"WHERE LOWER(f.name) LIKE ? " +
 					"ORDER BY rate";
 		}
 
 		if (param.length == 1 && param[0].equals("director")) {
 			sqlQuery = "SELECT f.film_id, f.name, f.description, f.releasedate, f.duration, f.rate, f.mpa_id, d.director_name, mr.mpa_name " +
-                    "FROM films AS f " +
+					"FROM films AS f " +
 					"JOIN directors_film df ON f.film_id = df.film_id " +
 					"JOIN directors d ON d.director_id = df.director_id " +
-                    "JOIN mpa_ratings AS mr ON f.mpa_id = mr.mpa_id " +
+					"JOIN mpa_ratings AS mr ON f.mpa_id = mr.mpa_id " +
 					"WHERE LOWER(d.director_name) LIKE ? " +
 					"ORDER BY rate";
 		}
 
 		if (param.length == 2) {
 			sqlQuery = "SELECT f.film_id, f.name, f.description, f.releasedate, f.duration, f.rate, f.mpa_id, d.director_name, mr.mpa_name " +
-                    "FROM films AS f " +
+					"FROM films AS f " +
 					"LEFT JOIN directors_film df ON f.film_id = df.film_id " +
 					"LEFT JOIN directors d ON d.director_id = df.director_id " +
 					"LEFT JOIN mpa_ratings AS mr ON f.mpa_id = mr.mpa_id " +

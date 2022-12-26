@@ -15,8 +15,8 @@ MERGE INTO genres (genre_id, genre_name)
 
 MERGE INTO event_types (event_type_id, name)
     VALUES (1, 'LIKE'),
-           (2, 'REVIEW'),
-           (3, 'FRIEND');
+           (2, 'FRIEND'),
+           (3, 'REVIEW');
 
 MERGE INTO operations (operation_id, name)
     VALUES (1, 'REMOVE'),

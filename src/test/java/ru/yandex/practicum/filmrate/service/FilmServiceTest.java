@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmrate.dao.DirectorStorage;
-import ru.yandex.practicum.filmrate.dao.UserStorage;
 import ru.yandex.practicum.filmrate.model.Director;
 import ru.yandex.practicum.filmrate.model.Film;
 import ru.yandex.practicum.filmrate.model.Mpa;
