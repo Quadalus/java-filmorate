@@ -14,12 +14,12 @@ import java.util.List;
 @RequestMapping("/directors")
 @Slf4j
 @RequiredArgsConstructor
+@ResponseStatus(HttpStatus.OK)
 public class DirectorController {
 
 	private final DirectorService directorService;
 
 	@GetMapping("/{id}")
-	@ResponseStatus(HttpStatus.OK)
 	public Director getDirectorById(@PathVariable int id) {
 		Director director = directorService.getById(id);
 		log.info("Режиссер с id={} получен.", director.getId());
@@ -27,7 +27,6 @@ public class DirectorController {
 	}
 
 	@GetMapping
-	@ResponseStatus(HttpStatus.OK)
 	public List<Director> getAllDirectors() {
 		log.info("Список режиссеров получен.");
 		return directorService.getAllDirectors();
@@ -42,7 +41,6 @@ public class DirectorController {
 	}
 
 	@PutMapping
-	@ResponseStatus(HttpStatus.OK)
 	public Director updateDirector(@Valid @RequestBody Director director) {
 		Director updatedDirector = directorService.updateDirector(director);
 		log.info("Режиссер с id={} обновлён.", updatedDirector.getId());
@@ -50,7 +48,6 @@ public class DirectorController {
 	}
 
 	@DeleteMapping("/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteDirector(@PathVariable int id) {
 		directorService.deleteDirector(id);
 		log.info("Режиссер с id={} удален.", id);

@@ -32,11 +32,12 @@ public class FilmDbStorage implements FilmStorage {
 
 	@Override
 	public Film addFilm(Film film) {
-		String sqlQuery = "INSERT INTO films(name, description, releasedate, DURATION, rate, mpa_id) " +
-				"VAlUES (?, ?, ?, ?, ?, ?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
-			PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"film_id"});
+			PreparedStatement stmt = connection.prepareStatement("INSERT INTO films(name, description, releasedate, " +
+					"duration, rate, mpa_id) " +
+					"VAlUES (?, ?, ?, ?, ?, ?)",
+					new String[]{"film_id"});
 			stmt.setString(1, film.getName());
 			stmt.setString(2, film.getDescription());
 			stmt.setDate(3, Date.valueOf(film.getReleaseDate()));
@@ -51,10 +52,9 @@ public class FilmDbStorage implements FilmStorage {
 
 	@Override
 	public Film updateFilm(Film film) {
-		String sqlQuery = "UPDATE films SET " +
-				"name = ?, description = ?, releasedate = ?, duration = ?, rate = ?, mpa_id = ? " +
-				"WHERE film_id = ?";
-		int result = jdbcTemplate.update(sqlQuery
+		int result = jdbcTemplate.update("UPDATE films SET " +
+						"name = ?, description = ?, releasedate = ?, duration = ?, rate = ?, mpa_id = ? " +
+						"WHERE film_id = ?"
 				, film.getName()
 				, film.getDescription()
 				, Date.valueOf(film.getReleaseDate())
@@ -71,24 +71,20 @@ public class FilmDbStorage implements FilmStorage {
 
 	@Override
 	public void deleteFilm(int id) {
-		String sqlQuery = "DELETE FROM films " +
-				"WHERE film_id = ?";
-		jdbcTemplate.update(sqlQuery, id);
+		jdbcTemplate.update("DELETE FROM films " +
+				"WHERE film_id = ?", id);
 	}
 
 	@Override
 	public void deleteAllFilms() {
-		String sqlQuery = "DELETE FROM films";
-		jdbcTemplate.update(sqlQuery);
+		jdbcTemplate.update("DELETE FROM films");
 	}
 
 	@Override
 	public Optional<Film> getFilmById(int id) {
-		String sqlQuery = "SELECT * FROM films AS f " +
+		List<Film> films = jdbcTemplate.query("SELECT * FROM films AS f " +
 				"JOIN mpa_ratings AS mr ON f.mpa_id = mr.mpa_id " +
-				"WHERE film_id = ?";
-		List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, id);
-
+				"WHERE film_id = ?", FilmDbStorage::makeFilm, id);
 		if (films.isEmpty()) {
 			return Optional.empty();
 		}
@@ -97,9 +93,8 @@ public class FilmDbStorage implements FilmStorage {
 
 	@Override
 	public List<Film> getListFilms() {
-		String sqlQuery = "SELECT * FROM films AS f " +
-				"JOIN mpa_ratings AS mr ON f.mpa_id = mr.mpa_id ";
-		List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm);
+		List<Film> films = jdbcTemplate.query("SELECT * FROM films AS f " +
+				"JOIN mpa_ratings AS mr ON f.mpa_id = mr.mpa_id ", FilmDbStorage::makeFilm);
 		addGenresToFilms(films);
 		addDirectorsToFilms(films);
 		return films;
@@ -213,10 +208,10 @@ public class FilmDbStorage implements FilmStorage {
 				.map(String::valueOf)
 				.collect(Collectors.joining(","));
 		final Map<Integer, Film> filmById = films.stream().collect(Collectors.toMap(Film::getId, identity()));
-		final String sqlQuery = "SELECT * FROM genres AS g, films_genres AS fg " +
+		jdbcTemplate.query("SELECT * FROM genres AS g, films_genres AS fg " +
 				"WHERE fg.genre_id = g.genre_id " +
-				"AND fg.film_id IN (" + filmIds + ")";
-		jdbcTemplate.query(sqlQuery, (rs) -> {
+				"AND fg.film_id IN (" + filmIds + ")",
+				(rs) -> {
 			final Film film = filmById.get(rs.getInt("film_id"));
 			film.setGenreToFilm(makeGenreForFilm(rs));
 		});
@@ -228,11 +223,10 @@ public class FilmDbStorage implements FilmStorage {
 				.map(String::valueOf)
 				.collect(Collectors.joining(","));
 		final Map<Integer, Film> filmById = films.stream().collect(Collectors.toMap(Film::getId, identity()));
-		final String sqlQuery = "SELECT * " +
+		jdbcTemplate.query("SELECT * " +
 				"FROM directors AS g, directors_film AS df " +
 				"WHERE df.director_id=g.director_id " +
-				"AND df.film_id IN (" + filmIds + ")";
-		jdbcTemplate.query(sqlQuery, (rs) -> {
+				"AND df.film_id IN (" + filmIds + ")", (rs) -> {
 			final Film film = filmById.get(rs.getInt("film_id"));
 			film.setDirectorsToFilm(makeDirector(rs));
 		});
