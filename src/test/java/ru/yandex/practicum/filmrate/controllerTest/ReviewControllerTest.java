@@ -73,7 +73,6 @@ public class ReviewControllerTest {
 		assertEquals(newReview.getContent(), reviewController.getReviewById(newReview.getReviewId()).getContent());
 		userController.deleteAllUsers();
 		filmController.deleteAllFilms();
-		reviewController.deleteReview(newReview.getReviewId());
 	}
 
 	@Test
@@ -95,7 +94,6 @@ public class ReviewControllerTest {
 		assertEquals(false, reviewController.getReviewById(newReview.getReviewId()).getIsPositive());
 		userController.deleteAllUsers();
 		filmController.deleteAllFilms();
-		reviewController.deleteReview(newReview.getReviewId());
 	}
 
 	@Test
@@ -112,7 +110,6 @@ public class ReviewControllerTest {
 		assertEquals(0, reviewController.getReviewsForFilm(0, 10).size());
 		userController.deleteAllUsers();
 		filmController.deleteAllFilms();
-		reviewController.deleteReview(newReview.getReviewId());
 	}
 
 	@Test
@@ -129,7 +126,6 @@ public class ReviewControllerTest {
 		assertEquals(newReview1, newReview);
 		userController.deleteAllUsers();
 		filmController.deleteAllFilms();
-		reviewController.deleteReview(newReview.getReviewId());
 	}
 
 	@Test
@@ -156,9 +152,6 @@ public class ReviewControllerTest {
 		assertEquals(2, reviewController.getReviewsForFilm(film3.getId(), 10).size());
 		userController.deleteAllUsers();
 		filmController.deleteAllFilms();
-		reviewController.deleteReview(newReview.getReviewId());
-		reviewController.deleteReview(newReview1.getReviewId());
-		reviewController.deleteReview(newReview2.getReviewId());
 	}
 
 	@Test
@@ -175,7 +168,6 @@ public class ReviewControllerTest {
 		assertEquals(1, reviewController.getReviewById(newReview.getReviewId()).getUseful());
 		userController.deleteAllUsers();
 		filmController.deleteAllFilms();
-		reviewController.deleteReview(newReview.getReviewId());
 	}
 
 	@Test
@@ -192,7 +184,6 @@ public class ReviewControllerTest {
 		assertEquals(-1, reviewController.getReviewById(newReview.getReviewId()).getUseful());
 		userController.deleteAllUsers();
 		filmController.deleteAllFilms();
-		reviewController.deleteReview(newReview.getReviewId());
 	}
 
 	@Test
@@ -211,7 +202,6 @@ public class ReviewControllerTest {
 		assertEquals(0, reviewController.getReviewById(newReview.getReviewId()).getUseful());
 		userController.deleteAllUsers();
 		filmController.deleteAllFilms();
-		reviewController.deleteReview(newReview.getReviewId());
 	}
 
 	@Test
@@ -230,6 +220,5 @@ public class ReviewControllerTest {
 		assertEquals(0, reviewController.getReviewById(newReview.getReviewId()).getUseful());
 		userController.deleteAllUsers();
 		filmController.deleteAllFilms();
-		reviewController.deleteReview(newReview.getReviewId());
 	}
 }

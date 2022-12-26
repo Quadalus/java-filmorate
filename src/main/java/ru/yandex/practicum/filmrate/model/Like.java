@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Like {
-    private Integer filmId;
-    private Integer userId;
+	private Integer filmId;
+	private Integer userId;
 }

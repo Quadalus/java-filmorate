@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class UserFriend {
-    private Integer userid;
-    private Integer friendId;
+	private Integer userid;
+	private Integer friendId;
 }
