@@ -30,6 +30,12 @@ public class EventDbStorage implements EventStorage {
 	@Autowired
 	public EventDbStorage(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+		if (eventOperation.isEmpty()) {
+			eventOperation = fullDirectory("operations", "operation_id", eventOperation);
+		}
+		if (eventType.isEmpty()) {
+			eventType = fullDirectory("event_types", "event_type_id", eventType);
+		}
 	}
 
 	@Override
@@ -47,12 +53,6 @@ public class EventDbStorage implements EventStorage {
 
 	@Override
 	public void addEvent(Event event) {
-		if (eventOperation.isEmpty()) {
-			eventOperation = fullDirectory("operations", "operation_id", eventOperation);
-		}
-		if (eventType.isEmpty()) {
-			eventType = fullDirectory("event_types", "event_type_id", eventType);
-		}
 		String sqlQuery = "INSERT INTO feed (time_feed,event_type_id,operation_id,user_id,entity_id) " +
 				"VALUES (?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
