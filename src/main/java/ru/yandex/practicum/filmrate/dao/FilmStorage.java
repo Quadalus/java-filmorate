@@ -7,17 +7,27 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface FilmStorage {
-    Film addFilm(Film film);
+	Film addFilm(Film film);
 
-    Film updateFilm(Film film);
+	Film updateFilm(Film film);
 
-    void deleteFilm(int id);
+	void deleteFilm(int id);
 
-    void deleteAllFilms();
+	void deleteAllFilms();
 
-    Optional<Film> getFilmById(int id);
+	Optional<Film> getFilmById(int id);
 
-    List<Film> getListFilms();
+	List<Film> getListFilms();
 
-    Map<Integer, Film> getFilmMap();
+	Map<Integer, Film> getFilmMap();
+
+	List<Film> getRecommendedFilms(int userId);
+
+	void addGenresToFilms(List<Film> films);
+
+	void addDirectorsToFilms(List<Film> films);
+
+	List<Film> searchFilm(String query, String searchParameters);
+
+	List<Film> getCommonFilms(int userId, int friendId);
 }

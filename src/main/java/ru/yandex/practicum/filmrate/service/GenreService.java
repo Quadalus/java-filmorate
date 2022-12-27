@@ -11,14 +11,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GenreService {
-    private final GenreStorage genreStorage;
+	private final GenreStorage genreStorage;
 
-    public Genre getGenreById(int id) {
-        return genreStorage.getById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Невозможно получить пользователя с id=%d", id)));
-    }
+	public Genre getGenreById(int id) {
+		return genreStorage.getById(id)
+				.orElseThrow(() -> new NotFoundException(String.format("Невозможно получить пользователя с id=%d", id)));
+	}
 
-    public List<Genre> getAllGenre() {
-        return genreStorage.getAllGenres();
-    }
+	public List<Genre> getAllGenre() {
+		return genreStorage.getAllGenres();
+	}
 }

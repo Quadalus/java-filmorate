@@ -21,72 +21,72 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmGenreStorageTest {
-    private final FilmStorage filmStorage;
-    private final FilmGenreStorage filmGenreStorage;
+	private final FilmStorage filmStorage;
+	private final FilmGenreStorage filmGenreStorage;
 
-    @Test
-    void createFilmWithGenre() {
-        Film testFilm = Film.builder()
-                .name("Test Film Name")
-                .description("test film 1")
-                .releaseDate(LocalDate.of(2022, 1, 1))
-                .duration(100)
-                .rate(4)
-                .mpa(new Mpa(1, "R"))
-                .genres(new LinkedHashSet<>(Set.of(new Genre(1, "Комедия"))))
-                .build();
+	@Test
+	void createFilmWithGenre() {
+		Film testFilm = Film.builder()
+				.name("Test Film Name")
+				.description("test film 1")
+				.releaseDate(LocalDate.of(2022, 1, 1))
+				.duration(100)
+				.rate(4)
+				.mpa(new Mpa(1, "R"))
+				.genres(new LinkedHashSet<>(Set.of(new Genre(1, "Комедия"))))
+				.build();
 
-        filmStorage.addFilm(testFilm);
-        filmGenreStorage.addGenreToFilm(testFilm.getId(), testFilm.getGenres());
-        var filmGenres = filmGenreStorage.getGenresByFilmId(testFilm.getId());
-        var genres = Set.of(new Genre(1, "Комедия"));
+		filmStorage.addFilm(testFilm);
+		filmGenreStorage.addGenreToFilm(testFilm.getId(), testFilm.getGenres());
+		var filmGenres = filmGenreStorage.getGenresByFilmId(testFilm.getId());
+		var genres = Set.of(new Genre(1, "Комедия"));
 
-        assertEquals(1, testFilm.getGenres().size());
-        assertEquals(genres, filmGenres);
-    }
+		assertEquals(1, testFilm.getGenres().size());
+		assertEquals(genres, filmGenres);
+	}
 
-    @Test
-    void updateFilmWithGenre() {
-        Film testFilm = Film.builder()
-                .id(1)
-                .name("Test Film Name")
-                .description("test film 1")
-                .releaseDate(LocalDate.of(2022, 1, 1))
-                .duration(100)
-                .rate(4)
-                .mpa(new Mpa(1, "R"))
-                .genres(new LinkedHashSet<>(Set.of(new Genre(1, "Комедия"))))
-                .build();
+	@Test
+	void updateFilmWithGenre() {
+		Film testFilm = Film.builder()
+				.id(1)
+				.name("Test Film Name")
+				.description("test film 1")
+				.releaseDate(LocalDate.of(2022, 1, 1))
+				.duration(100)
+				.rate(4)
+				.mpa(new Mpa(1, "R"))
+				.genres(new LinkedHashSet<>(Set.of(new Genre(1, "Комедия"))))
+				.build();
 
-        filmStorage.addFilm(testFilm);
-        filmGenreStorage.addGenreToFilm(testFilm.getId(), testFilm.getGenres());
-        var filmGenres = filmGenreStorage.getGenresByFilmId(testFilm.getId());
-        var genres = Set.of(new Genre(1, "Комедия"));
+		Film film = filmStorage.addFilm(testFilm);
+		filmGenreStorage.addGenreToFilm(testFilm.getId(), testFilm.getGenres());
+		var filmGenres = filmGenreStorage.getGenresByFilmId(testFilm.getId());
+		var genres = Set.of(new Genre(1, "Комедия"));
 
-        assertEquals(1, testFilm.getGenres().size());
-        assertEquals(genres, filmGenres);
+		assertEquals(1, testFilm.getGenres().size());
+		assertEquals(genres, filmGenres);
 
-        Film updatedFilm = Film.builder()
-                .id(1)
-                .name("Test Film Name")
-                .description("test film 1")
-                .releaseDate(LocalDate.of(2022, 1, 1))
-                .duration(100)
-                .rate(4)
-                .mpa(new Mpa(1, "R"))
-                .genres(new LinkedHashSet<>(Set.of(new Genre(1, "Комедия"), new Genre(2, "Боевик"))))
-                .build();
+		Film updatedFilm = Film.builder()
+				.id(film.getId())
+				.name("Test Film Name")
+				.description("test film 1")
+				.releaseDate(LocalDate.of(2022, 1, 1))
+				.duration(100)
+				.rate(4)
+				.mpa(new Mpa(1, "R"))
+				.genres(new LinkedHashSet<>(Set.of(new Genre(1, "Комедия"), new Genre(2, "Боевик"))))
+				.build();
 
-        filmStorage.updateFilm(updatedFilm);
-        testFilm = filmStorage.getFilmById(1).get();
-        filmGenreStorage.addGenreToFilm(updatedFilm.getId(), updatedFilm.getGenres());
-        filmGenres = filmGenreStorage.getGenresByFilmId(updatedFilm.getId());
-        testFilm.setGenres(filmGenres);
-        genres = Set.of(new Genre(1, "Комедия"), new Genre(2, "Боевик"));
+		filmStorage.updateFilm(updatedFilm);
+		testFilm = filmStorage.getFilmById(film.getId()).get();
+		filmGenreStorage.addGenreToFilm(updatedFilm.getId(), updatedFilm.getGenres());
+		filmGenres = filmGenreStorage.getGenresByFilmId(updatedFilm.getId());
+		testFilm.setGenres(filmGenres);
+		genres = Set.of(new Genre(1, "Комедия"), new Genre(2, "Боевик"));
 
-        assertEquals(1, testFilm.getId());
-        assertEquals(1, filmStorage.getListFilms().size());
-        assertEquals(2, testFilm.getGenres().size());
-        assertEquals(genres, filmGenres);
-    }
+		assertEquals(film.getId(), testFilm.getId());
+		assertEquals(1, filmStorage.getListFilms().size());
+		assertEquals(2, testFilm.getGenres().size());
+		assertEquals(genres, filmGenres);
+	}
 }

@@ -10,21 +10,21 @@ import ru.yandex.practicum.filmrate.model.ErrorResponse;
 
 @RestControllerAdvice
 public class ErrorHandler {
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationException(final ValidationException e) {
-        return new ErrorResponse("Ошибка валидации!", e.getMessage());
-    }
+	@ExceptionHandler
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorResponse handleValidationException(final ValidationException e) {
+		return new ErrorResponse("Ошибка валидации!", e.getMessage());
+	}
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFoundException(final NotFoundException e) {
-        return new ErrorResponse("Запрошенные данные не найдены!", e.getMessage());
-    }
+	@ExceptionHandler
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ErrorResponse handleNotFoundException(final NotFoundException e) {
+		return new ErrorResponse("Запрошенные данные не найдены!", e.getMessage());
+	}
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleInternalException(final InternalError e) {
-        return new ErrorResponse("Неизвестная ошибка сервера!", e.getMessage());
-    }
+	@ExceptionHandler
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ErrorResponse handleInternalException(final InternalError e) {
+		return new ErrorResponse("Неизвестная ошибка сервера!", e.getMessage());
+	}
 }
